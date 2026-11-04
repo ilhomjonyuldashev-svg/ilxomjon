@@ -29,7 +29,7 @@
                 <p class="text-xs text-gray-500 mt-1">finorg.uz тизимига кириш учун махфий PIN-кодни киритинг (Стандарт: 1234)</p>
             </div>
             <div class="space-y-4">
-                <input type="password" id="pin-input" maxlength="6" placeholder="PIN-код (масалан: 1234)" class="w-full bg-gray-50 border border-gray-200 rounded-2xl px-4 py-3.5 text-center text-lg tracking-widest font-bold focus:outline-none focus:ring-2 focus:ring-indigo-500 text-gray-800">
+                <input type="password" id="pin-input" maxlength="6" onkeydown="handlePinKeydown(event)" placeholder="PIN-код (масалан: 1234)" class="w-full bg-gray-50 border border-gray-200 rounded-2xl px-4 py-3.5 text-center text-lg tracking-widest font-bold focus:outline-none focus:ring-2 focus:ring-indigo-500 text-gray-800">
                 <button onclick="verifyPinCode()" class="w-full bg-indigo-600 hover:bg-indigo-700 text-white py-3.5 rounded-2xl font-bold text-sm shadow-md transition-all">
                     Тизимни очиш
                 </button>
@@ -105,15 +105,17 @@
             </button>
         </nav>
         
-        <!-- Панель пастки қисми -->
-        <div class="p-4 border-t border-gray-800 text-[11px] text-gray-400 text-center flex flex-col space-y-2">
-            <span>finorg.uz &bull; Cloud v2.2</span>
-            <div class="flex items-center justify-center space-x-1 text-[10px] text-emerald-400 font-medium">
-                <span class="w-2 h-2 rounded-full bg-emerald-400 animate-pulse"></span>
-                <span id="cloud-sync-status">Cloud Sync Active</span>
+        <!-- Панель пастки қисми (Тоза ва тартибли дизайн) -->
+        <div class="px-3 py-3 border-t border-gray-800 text-[11px] text-gray-400 bg-[#070e20] space-y-2.5">
+            <div class="flex items-center justify-between gap-1 overflow-hidden">
+                <span class="font-mono text-[11px] text-gray-300">finorg.uz</span>
+                <div class="flex items-center space-x-1.5 bg-emerald-950/60 px-2 py-0.5 rounded-full border border-emerald-800/40" title="Cloud Sync Active">
+                    <span class="w-2 h-2 rounded-full bg-emerald-400 animate-pulse"></span>
+                </div>
             </div>
-            <button onclick="lockAppSession()" class="text-[10px] bg-red-900/50 hover:bg-red-900 text-red-200 py-1.5 rounded-lg transition-colors font-medium">
-                <i class="fa-solid fa-lock mr-1"></i> Сеансни ёпиш (Lock)
+            <button onclick="lockAppSession()" class="w-full text-xs bg-red-600 hover:bg-red-700 text-white py-2 px-3 rounded-xl transition-all font-medium flex items-center justify-center space-x-2 shadow-sm">
+                <i class="fa-solid fa-lock text-xs"></i>
+                <span>Сеансни ёпиш (Lock)</span>
             </button>
         </div>
     </aside>
@@ -477,6 +479,12 @@
                 showNotification("Хуш келибсиз!", "Тизим муваффақиятли очилди ва булутдан янгиланди.");
             } else {
                 showNotification("Хатолик", "Киритилган PIN-код нотўғри! (Стандарт: 1234)");
+            }
+        }
+
+        function handlePinKeydown(event) {
+            if (event.key === 'Enter') {
+                verifyPinCode();
             }
         }
 
