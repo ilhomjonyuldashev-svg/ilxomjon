@@ -16,7 +16,7 @@
         .custom-scrollbar::-webkit-scrollbar-thumb:hover { background: #94a3b8; }
     </style>
 </head>
-<body class="bg-gray-50 text-gray-800 h-screen flex overflow-hidden">
+<body class="bg-gray-50 text-gray-800 h-screen flex overflow-hidden text-sm">
 
     <!-- Custom Notification Box (Instead of alert) -->
     <div id="notification-modal" class="fixed inset-0 bg-black/50 z-50 hidden flex items-center justify-center p-4">
@@ -25,12 +25,12 @@
                 <div id="notif-icon-container" class="w-10 h-10 rounded-xl flex items-center justify-center text-white bg-indigo-600">
                     <i id="notif-icon" class="fa-solid fa-info"></i>
                 </div>
-                <h3 id="notif-title" class="font-bold text-lg text-gray-900">Хабарнома</h3>
+                <h3 id="notif-title" class="font-bold text-base text-gray-900">Хабарнома</h3>
             </div>
-            <p id="notif-message" class="text-gray-600 text-sm mb-6 leading-relaxed"></p>
+            <p id="notif-message" class="text-gray-600 text-xs sm:text-sm mb-6 leading-relaxed"></p>
             <div class="flex justify-end space-x-3">
-                <button id="notif-cancel-btn" onclick="closeNotification(false)" class="hidden px-4 py-2 rounded-xl text-gray-600 hover:bg-gray-100 font-medium text-sm transition-colors">Бекор қилиш</button>
-                <button onclick="closeNotification(true)" class="px-5 py-2 rounded-xl bg-indigo-600 hover:bg-indigo-700 text-white font-medium text-sm shadow-md transition-all">Тўғри</button>
+                <button id="notif-cancel-btn" onclick="closeNotification(false)" class="hidden px-4 py-2 rounded-xl text-gray-600 hover:bg-gray-100 font-medium text-xs sm:text-sm transition-colors">Бекор қилиш</button>
+                <button onclick="closeNotification(true)" class="px-5 py-2 rounded-xl bg-indigo-600 hover:bg-indigo-700 text-white font-medium text-xs sm:text-sm shadow-md transition-all">Тўғри</button>
             </div>
         </div>
     </div>
@@ -39,12 +39,12 @@
     <div id="generic-modal" class="fixed inset-0 bg-black/50 z-40 hidden flex items-center justify-center p-4">
         <div class="bg-white rounded-2xl max-w-lg w-full p-6 shadow-2xl custom-scrollbar max-h-[90vh] overflow-y-auto">
             <div class="flex items-center justify-between mb-4 pb-3 border-b border-gray-100">
-                <h3 id="modal-main-title" class="font-bold text-lg text-gray-900">Элемент қўшиш</h3>
+                <h3 id="modal-main-title" class="font-bold text-base sm:text-lg text-gray-900">Элемент қўшиш</h3>
                 <button onclick="closeModal()" class="text-gray-400 hover:text-gray-600 p-1.5 rounded-xl hover:bg-gray-100">
                     <i class="fa-solid fa-xmark text-lg"></i>
                 </button>
             </div>
-            <div id="modal-body-content" class="space-y-4">
+            <div id="modal-body-content" class="space-y-4 text-xs sm:text-sm">
                 <!-- Dynamically filled depending on context -->
             </div>
         </div>
@@ -55,31 +55,31 @@
         <!-- Логотип ва Сарлавҳа -->
         <div class="h-16 flex items-center px-6 border-b border-gray-800">
             <div class="flex items-center space-x-3">
-                <div class="w-9 h-9 bg-indigo-600 rounded-xl flex items-center justify-center font-bold text-lg shadow-md">O</div>
-                <span class="font-bold text-lg tracking-wide">Органайзер</span>
+                <div class="w-9 h-9 bg-indigo-600 rounded-xl flex items-center justify-center font-bold text-base shadow-md">O</div>
+                <span class="font-bold text-base tracking-wide">Органайзер</span>
             </div>
         </div>
 
         <!-- Меню элементлари -->
-        <nav class="flex-1 px-4 py-6 space-y-2">
-            <button onclick="switchSection('organizer')" id="nav-organizer" class="w-full flex items-center space-x-3 px-4 py-3 rounded-xl bg-indigo-600 text-white font-medium transition-all shadow-md">
-                <i class="fa-solid fa-table-cells text-lg"></i>
+        <nav class="flex-1 px-4 py-6 space-y-2 text-xs sm:text-sm font-medium">
+            <button onclick="switchSection('organizer')" id="nav-organizer" class="w-full flex items-center space-x-3 px-4 py-3 rounded-xl bg-indigo-600 text-white transition-all shadow-md">
+                <i class="fa-solid fa-table-cells text-base"></i>
                 <span>Органайзер</span>
             </button>
-            <button onclick="switchSection('files')" id="nav-files" class="w-full flex items-center space-x-3 px-4 py-3 rounded-xl text-gray-300 hover:bg-gray-800 hover:text-white transition-all font-medium">
-                <i class="fa-solid fa-folder-open text-lg"></i>
+            <button onclick="switchSection('files')" id="nav-files" class="w-full flex items-center space-x-3 px-4 py-3 rounded-xl text-gray-300 hover:bg-gray-800 hover:text-white transition-all">
+                <i class="fa-solid fa-folder-open text-base"></i>
                 <span>Файллар</span>
-                <span class="ml-auto text-xs bg-gray-700 px-2 py-0.5 rounded-full text-gray-300" id="files-badge">0</span>
+                <span class="ml-auto text-[10px] bg-gray-700 px-2 py-0.5 rounded-full text-gray-300" id="files-badge">0</span>
             </button>
-            <button onclick="switchSection('law')" id="nav-law" class="w-full flex items-center space-x-3 px-4 py-3 rounded-xl text-gray-300 hover:bg-gray-800 hover:text-white transition-all font-medium">
-                <i class="fa-solid fa-book-bookmark text-lg"></i>
+            <button onclick="switchSection('law')" id="nav-law" class="w-full flex items-center space-x-3 px-4 py-3 rounded-xl text-gray-300 hover:bg-gray-800 hover:text-white transition-all">
+                <i class="fa-solid fa-book-bookmark text-base"></i>
                 <span>Қонунчилик</span>
-                <span class="ml-auto text-xs bg-indigo-900 px-2 py-0.5 rounded-full text-indigo-200">База</span>
+                <span class="ml-auto text-[10px] bg-indigo-900 px-2 py-0.5 rounded-full text-indigo-200">База</span>
             </button>
         </nav>
         
         <!-- Панель пастки қисми -->
-        <div class="p-4 border-t border-gray-800 text-xs text-gray-400 text-center">
+        <div class="p-4 border-t border-gray-800 text-[11px] text-gray-400 text-center">
             Pro Органайзер v2.0 &bull; Узб
         </div>
     </aside>
@@ -90,18 +90,14 @@
         <header class="h-16 bg-white border-b border-gray-200 flex items-center justify-between px-6 z-10">
             <div class="flex items-center space-x-4">
                 <button onclick="toggleSidebar()" class="p-2.5 rounded-xl hover:bg-gray-100 text-gray-600 transition-colors focus:outline-none" title="Менюни очиш/ёпиш">
-                    <i class="fa-solid fa-grip text-lg"></i>
+                    <i class="fa-solid fa-grip text-base"></i>
                 </button>
-                <h1 class="text-xl font-bold text-gray-900" id="main-title">Органайзер</h1>
+                <h1 class="text-lg sm:text-xl font-bold text-gray-900" id="main-title">Органайзер</h1>
             </div>
 
             <div class="flex items-center space-x-3">
-                <button onclick="openHostingGuideModal()" class="hidden sm:flex items-center space-x-2 bg-emerald-600 hover:bg-emerald-700 text-white px-3.5 py-2 rounded-xl font-medium text-xs transition-all shadow-sm">
-                    <i class="fa-solid fa-globe"></i>
-                    <span>Интернетда очиш</span>
-                </button>
-                <button onclick="openAddModal()" class="flex items-center space-x-2 bg-indigo-600 hover:bg-indigo-700 text-white px-4 py-2 rounded-xl font-medium transition-all shadow-sm">
-                    <i class="fa-solid fa-plus"></i>
+                <button onclick="openAddModal()" class="flex items-center space-x-2 bg-indigo-600 hover:bg-indigo-700 text-white px-4 py-2 rounded-xl font-medium text-xs sm:text-sm transition-all shadow-sm">
+                    <i class="fa-solid fa-plus text-xs"></i>
                     <span id="add-btn-text">Қўшиш</span>
                 </button>
             </div>
@@ -114,10 +110,10 @@
             <div id="organizer-view">
                 <!-- Таблар -->
                 <div class="flex flex-wrap items-center justify-between gap-4 border-b border-gray-200 pb-4 mb-6">
-                    <div class="flex flex-wrap gap-2">
-                        <button onclick="switchTab('tasks')" id="tab-tasks" class="px-5 py-2.5 rounded-xl font-medium text-sm bg-indigo-50 text-indigo-600 transition-all">Вазифалар</button>
-                        <button onclick="switchTab('notes')" id="tab-notes" class="px-5 py-2.5 rounded-xl font-medium text-sm text-gray-600 hover:bg-gray-100 transition-all">Қайдлар</button>
-                        <button onclick="switchTab('calendar')" id="tab-calendar" class="px-5 py-2.5 rounded-xl font-medium text-sm text-gray-600 hover:bg-gray-100 transition-all">Календарь</button>
+                    <div class="flex flex-wrap gap-2 text-xs sm:text-sm">
+                        <button onclick="switchTab('tasks')" id="tab-tasks" class="px-4 sm:px-5 py-2.5 rounded-xl font-medium bg-indigo-50 text-indigo-600 transition-all">Вазифалар</button>
+                        <button onclick="switchTab('notes')" id="tab-notes" class="px-4 sm:px-5 py-2.5 rounded-xl font-medium text-gray-600 hover:bg-gray-100 transition-all">Қайдлар</button>
+                        <button onclick="switchTab('calendar')" id="tab-calendar" class="px-4 sm:px-5 py-2.5 rounded-xl font-medium text-gray-600 hover:bg-gray-100 transition-all">Календарь</button>
                     </div>
                     <!-- Фирмалар бошқаруви тугмаси -->
                     <button onclick="openFirmsModal()" class="flex items-center space-x-2 text-xs bg-gray-100 hover:bg-gray-200 text-gray-700 px-3 py-2 rounded-xl font-medium transition-all">
@@ -131,7 +127,7 @@
                     <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 bg-white p-4 rounded-2xl border border-gray-100 shadow-sm mb-4">
                         <div class="flex items-center space-x-3 w-full sm:w-auto flex-1">
                             <i class="fa-solid fa-magnifying-glass text-gray-400 ml-2"></i>
-                            <input type="text" id="task-search" oninput="renderTasks()" placeholder="Вазифаларни излаш..." class="w-full bg-transparent border-none focus:outline-none text-sm text-gray-700">
+                            <input type="text" id="task-search" oninput="renderTasks()" placeholder="Вазифаларни излаш..." class="w-full bg-transparent border-none focus:outline-none text-xs sm:text-sm text-gray-700">
                         </div>
                         <div class="flex flex-wrap items-center space-x-2 w-full sm:w-auto justify-end gap-2">
                             <select id="task-firm-filter" onchange="renderTasks()" class="bg-gray-50 border border-gray-200 text-gray-700 text-xs rounded-xl px-3 py-2 focus:outline-none focus:ring-2 focus:ring-indigo-500">
@@ -153,16 +149,16 @@
 
                 <!-- Қайдлар бўлими -->
                 <div id="notes-content" class="hidden">
-                    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4" id="notes-grid">
+                    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 text-xs sm:text-sm" id="notes-grid">
                         <!-- Dynamically rendered notes -->
                     </div>
                 </div>
 
                 <!-- Календарь бўлими -->
-                <div id="calendar-content" class="hidden bg-white p-6 rounded-2xl border border-gray-100 shadow-sm">
+                <div id="calendar-content" class="hidden bg-white p-6 rounded-2xl border border-gray-100 shadow-sm text-xs sm:text-sm">
                     <div class="flex flex-col sm:flex-row justify-between items-center mb-6 gap-4">
                         <div class="flex items-center space-x-4">
-                            <h3 id="cal-month-year" class="font-bold text-xl text-gray-900"></h3>
+                            <h3 id="cal-month-year" class="font-bold text-base sm:text-lg text-gray-900"></h3>
                         </div>
                         <div class="flex items-center space-x-2">
                             <button onclick="changeMonth(-1)" class="p-2 rounded-xl bg-gray-100 hover:bg-gray-200 text-gray-700 transition-colors"><i class="fa-solid fa-chevron-left"></i></button>
@@ -171,7 +167,7 @@
                         </div>
                     </div>
                     <!-- Calendar Grid -->
-                    <div class="grid grid-cols-7 gap-1 text-center font-semibold text-xs text-gray-400 mb-2">
+                    <div class="grid grid-cols-7 gap-1 text-center font-semibold text-[11px] sm:text-xs text-gray-400 mb-2">
                         <div>Ду</div><div>Се</div><div>Чор</div><div>Пай</div><div>Жум</div><div>Шан</div><div>Як</div>
                     </div>
                     <div id="calendar-days" class="grid grid-cols-7 gap-2">
@@ -181,7 +177,7 @@
                     <!-- Selected Date Events Panel -->
                     <div class="mt-8 pt-6 border-t border-gray-100">
                         <div class="flex justify-between items-center mb-4">
-                            <h4 id="selected-date-title" class="font-bold text-gray-800">Танланган сана тадбирлари</h4>
+                            <h4 id="selected-date-title" class="font-bold text-xs sm:text-sm text-gray-800">Танланган сана тадбирлари</h4>
                             <button onclick="openEventAddModal()" class="text-xs bg-indigo-50 text-indigo-600 font-medium px-3 py-1.5 rounded-lg hover:bg-indigo-100 transition-colors">
                                 <i class="fa-solid fa-plus mr-1"></i> Тадбир қўшиш
                             </button>
@@ -194,13 +190,13 @@
             </div>
 
             <!-- ФАЙЛЛАР КЎРИНИШИ (2-босқич) -->
-            <div id="files-view" class="hidden space-y-6">
+            <div id="files-view" class="hidden space-y-6 text-xs sm:text-sm">
                 <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 bg-white p-5 rounded-2xl border border-gray-100 shadow-sm">
                     <div>
-                        <h2 class="text-xl font-bold text-gray-900">Ҳужжатлар ва Файллар</h2>
-                        <p class="text-sm text-gray-500">Корпоратив ҳужжатлар, ҳисоботлар ва шартномалар архиви.</p>
+                        <h2 class="text-lg sm:text-xl font-bold text-gray-900">Ҳужжатлар ва Файллар</h2>
+                        <p class="text-xs sm:text-sm text-gray-500">Корпоратив ҳужжатлар, ҳисоботлар ва шартномалар архиви.</p>
                     </div>
-                    <button onclick="openFileUploadModal()" class="flex items-center space-x-2 bg-indigo-600 hover:bg-indigo-700 text-white px-4 py-2.5 rounded-xl font-medium text-sm transition-all shadow-sm">
+                    <button onclick="openFileUploadModal()" class="flex items-center space-x-2 bg-indigo-600 hover:bg-indigo-700 text-white px-4 py-2.5 rounded-xl font-medium text-xs sm:text-sm transition-all shadow-sm">
                         <i class="fa-solid fa-cloud-arrow-up"></i>
                         <span>Файл юклаш</span>
                     </button>
@@ -213,23 +209,23 @@
             </div>
 
             <!-- ҚОНУНЧИЛИК КЎРИНИШИ (3-босқич) -->
-            <div id="law-view" class="hidden space-y-6">
+            <div id="law-view" class="hidden space-y-6 text-xs sm:text-sm">
                 <div class="bg-gradient-to-r from-indigo-900 to-indigo-800 text-white p-6 rounded-2xl shadow-md">
-                    <h2 class="text-xl font-bold mb-2">Меъёрий-ҳуқуқий ҳужжатлар базаси</h2>
-                    <p class="text-indigo-200 text-sm mb-4 max-w-2xl">Ўзбекистон Республикасининг текширувлар, давлат харидлари, молия ва солиққа оид қонунчилик ҳужжатлари реестри.</p>
+                    <h2 class="text-lg sm:text-xl font-bold mb-2">Меъёрий-ҳуқуқий ҳужжатлар базаси</h2>
+                    <p class="text-indigo-200 text-xs sm:text-sm mb-4 max-w-2xl">Ўзбекистон Республикасининг текширувлар, давлат харидлари, молия ва солиққа оид қонунчилик ҳужжатлари реестри.</p>
                     
                     <div class="flex items-center bg-white/10 backdrop-blur-md rounded-xl p-1 border border-white/20">
                         <i class="fa-solid fa-magnifying-glass text-indigo-300 ml-3"></i>
-                        <input type="text" id="law-search" oninput="renderLaws()" placeholder="Қонунлар, моддалар ёки мавзу бўйича излаш..." class="w-full bg-transparent border-none text-white placeholder-indigo-300 px-3 py-2 text-sm focus:outline-none">
+                        <input type="text" id="law-search" oninput="renderLaws()" placeholder="Қонунлар, моддалар ёки мавзу бўйича излаш..." class="w-full bg-transparent border-none text-white placeholder-indigo-300 px-3 py-2 text-xs sm:text-sm focus:outline-none">
                     </div>
                 </div>
 
                 <!-- Filter Categories -->
-                <div class="flex flex-wrap gap-2" id="law-categories">
-                    <button onclick="filterLawCategory('all')" id="cat-all" class="px-4 py-2 rounded-xl text-xs font-medium bg-indigo-600 text-white transition-all shadow-sm">Барчаси</button>
-                    <button onclick="filterLawCategory('purchases')" id="cat-purchases" class="px-4 py-2 rounded-xl text-xs font-medium bg-white text-gray-600 hover:bg-gray-100 transition-all border border-gray-200">Давлат харидлари</button>
-                    <button onclick="filterLawCategory('audits')" id="cat-audits" class="px-4 py-2 rounded-xl text-xs font-medium bg-white text-gray-600 hover:bg-gray-100 transition-all border border-gray-200">Текширувлар</button>
-                    <button onclick="filterLawCategory('finance')" id="cat-finance" class="px-4 py-2 rounded-xl text-xs font-medium bg-white text-gray-600 hover:bg-gray-100 transition-all border border-gray-200">Молия ва Солиқ</button>
+                <div class="flex flex-wrap gap-2 text-xs" id="law-categories">
+                    <button onclick="filterLawCategory('all')" id="cat-all" class="px-4 py-2 rounded-xl font-medium bg-indigo-600 text-white transition-all shadow-sm">Барчаси</button>
+                    <button onclick="filterLawCategory('purchases')" id="cat-purchases" class="px-4 py-2 rounded-xl font-medium bg-white text-gray-600 hover:bg-gray-100 transition-all border border-gray-200">Давлат харидлари</button>
+                    <button onclick="filterLawCategory('audits')" id="cat-audits" class="px-4 py-2 rounded-xl font-medium bg-white text-gray-600 hover:bg-gray-100 transition-all border border-gray-200">Текширувлар</button>
+                    <button onclick="filterLawCategory('finance')" id="cat-finance" class="px-4 py-2 rounded-xl font-medium bg-white text-gray-600 hover:bg-gray-100 transition-all border border-gray-200">Молия ва Солиқ</button>
                 </div>
 
                 <!-- Laws List -->
@@ -254,9 +250,9 @@
                 { id: 4, name: '«Universal Servis XK»', tin: '201333444' }
             ],
             tasks: JSON.parse(localStorage.getItem('organizer_tasks')) || [
-                { id: 1, title: 'Молиявий ҳисоботни кўриб чиқиш', desc: '3-чорак бўйича кўрсаткичларни текшириш ва таҳлил қилиш.', completed: false, important: true, date: '2026-06-10', firmIds: [1, 2], submittedFirms: [1] },
-                { id: 2, title: 'Даромад солиғи ҳисоботини топшириш', desc: 'Солиқ қўмитаси портали орқали ҳисоботни тақдим этиш.', completed: false, important: true, date: '2026-06-15', firmIds: [1, 2, 3], submittedFirms: [1] },
-                { id: 3, title: 'Янги веб-сайт макетини тасдиқлаш', desc: 'Дизайнер томонидан юборилган макетларни кўриш.', completed: true, important: false, date: '2026-06-05', firmIds: [4], submittedFirms: [4] }
+                { id: 1, title: 'Молиявий ҳисоботни кўриб чиқиш', desc: '3-чорак бўйича кўрсаткичларни текшириш ва таҳлил қилиш.', completed: false, important: true, date: '2026-06-10', taskType: 'general', firmIds: [1, 2], submittedFirms: [1], paidFirms: [], firmNotes: {} },
+                { id: 2, title: 'Даромад солиғи ҳисоботини топшириш', desc: 'Солиқ қўмитаси портали орқали ҳисоботни тақдим этиш.', completed: false, important: true, date: '2026-06-15', taskType: 'tax_report', firmIds: [1, 2, 3], submittedFirms: [1], paidFirms: [], firmNotes: {} },
+                { id: 3, title: 'ИНПС қайдномасини топшириш', desc: 'Хдимлар бўйича ИНПС реестрини шакллантириш ва жўнатиш.', completed: false, important: false, date: '2026-06-18', taskType: 'inps', firmIds: [1, 4], submittedFirms: [], paidFirms: [1], firmNotes: {} }
             ],
             notes: JSON.parse(localStorage.getItem('organizer_notes')) || [
                 { id: 1, title: 'Муҳим эслатма', desc: 'Шартномаларни имзолашдан олдин юридик бўлим билан келишиш лозим.', color: 'amber' },
@@ -357,18 +353,18 @@
 
             if (section === 'organizer') {
                 document.getElementById('organizer-view').classList.remove('hidden');
-                document.getElementById('nav-organizer').className = "w-full flex items-center space-x-3 px-4 py-3 rounded-xl bg-indigo-600 text-white font-medium transition-all shadow-md";
+                document.getElementById('nav-organizer').className = "w-full flex items-center space-x-3 px-4 py-3 rounded-xl bg-indigo-600 text-white transition-all shadow-md";
                 document.getElementById('main-title').innerText = "Органайзер";
                 document.getElementById('add-btn-text').innerText = "Қўшиш";
             } else if (section === 'files') {
                 document.getElementById('files-view').classList.remove('hidden');
-                document.getElementById('nav-files').className = "w-full flex items-center space-x-3 px-4 py-3 rounded-xl bg-indigo-600 text-white font-medium transition-all shadow-md";
+                document.getElementById('nav-files').className = "w-full flex items-center space-x-3 px-4 py-3 rounded-xl bg-indigo-600 text-white transition-all shadow-md";
                 document.getElementById('main-title').innerText = "Файллар";
                 document.getElementById('add-btn-text').innerText = "Файл юклаш";
                 renderFiles();
             } else if (section === 'law') {
                 document.getElementById('law-view').classList.remove('hidden');
-                document.getElementById('nav-law').className = "w-full flex items-center space-x-3 px-4 py-3 rounded-xl bg-indigo-600 text-white font-medium transition-all shadow-md";
+                document.getElementById('nav-law').className = "w-full flex items-center space-x-3 px-4 py-3 rounded-xl bg-indigo-600 text-white transition-all shadow-md";
                 document.getElementById('main-title').innerText = "Қонунчилик базаси";
                 document.getElementById('add-btn-text').innerText = "Қонун қўшиш";
                 renderLaws();
@@ -379,10 +375,10 @@
             state.currentTab = tab;
             ['tasks', 'notes', 'calendar'].forEach(t => {
                 document.getElementById(`${t}-content`).classList.add('hidden');
-                document.getElementById(`tab-${t}`).className = "px-5 py-2.5 rounded-xl font-medium text-sm text-gray-600 hover:bg-gray-100 transition-all";
+                document.getElementById(`tab-${t}`).className = "px-4 sm:px-5 py-2.5 rounded-xl font-medium text-gray-600 hover:bg-gray-100 transition-all";
             });
             document.getElementById(`${tab}-content`).classList.remove('hidden');
-            document.getElementById(`tab-${tab}`).className = "px-5 py-2.5 rounded-xl font-medium text-sm bg-indigo-50 text-indigo-600 transition-all";
+            document.getElementById(`tab-${tab}`).className = "px-4 sm:px-5 py-2.5 rounded-xl font-medium bg-indigo-50 text-indigo-600 transition-all";
 
             if (tab === 'tasks') renderTasks();
             if (tab === 'notes') renderNotes();
@@ -432,7 +428,17 @@
                     else if (t.date === todayStr) dateBadgeClass = "text-amber-600 bg-amber-50 font-bold";
                 }
 
-                // Render firm submission & payment checklist badges
+                // Task type badge label
+                let typeBadge = '';
+                if (t.taskType === 'tax_report') {
+                    typeBadge = '<span class="text-[9px] bg-purple-50 text-purple-700 px-2 py-0.5 rounded-full font-medium">Солиқ ҳисоботи</span>';
+                } else if (t.taskType === 'inps') {
+                    typeBadge = '<span class="text-[9px] bg-blue-50 text-blue-700 px-2 py-0.5 rounded-full font-medium">ИНПС / Реестр</span>';
+                } else {
+                    typeBadge = '<span class="text-[9px] bg-gray-100 text-gray-600 px-2 py-0.5 rounded-full font-medium">Умумий вазифа</span>';
+                }
+
+                // Render firm submission & payment checklist badges based on taskType
                 let firmsHtml = '';
                 if (t.firmIds && t.firmIds.length > 0) {
                     firmsHtml = `<div class="space-y-1.5 mb-3 pt-2 border-t border-gray-50">
@@ -446,17 +452,35 @@
                         const isPaid = t.paidFirms && t.paidFirms.includes(fId);
                         const firmNote = (t.firmNotes && t.firmNotes[fId]) ? t.firmNotes[fId] : '';
                         
+                        let badgesHtml = '';
+                        if (t.taskType === 'tax_report') {
+                            badgesHtml = `
+                                <span title="${isSubmitted ? 'Топширилган' : 'Топширилмаган'}" class="px-1.5 py-0.5 rounded ${isSubmitted ? 'bg-emerald-50 text-emerald-700 font-medium' : 'bg-gray-200 text-gray-500'}">
+                                    ${isSubmitted ? 'Топширилди' : 'Топширилмади'}
+                                </span>
+                                <span title="${isPaid ? 'Тўлов қилинди' : 'Тўлов қилинмади'}" class="px-1.5 py-0.5 rounded ${isPaid ? 'bg-blue-50 text-blue-700 font-medium' : 'bg-gray-200 text-gray-500'}">
+                                    ${isPaid ? 'Тўлов қилинди' : 'Тўлов қилинмади'}
+                                </span>
+                            `;
+                        } else if (t.taskType === 'inps') {
+                            badgesHtml = `
+                                <span title="${isPaid ? 'Тўлов қилинди' : 'Тўлов қилинмади'}" class="px-1.5 py-0.5 rounded ${isPaid ? 'bg-blue-50 text-blue-700 font-medium' : 'bg-gray-200 text-gray-500'}">
+                                    ${isPaid ? 'Тўлов қилинди' : 'Тўлов қилинмади'}
+                                </span>
+                                <span title="${isSubmitted ? 'Реестр жўнатилди' : 'Реестр жўнатилмади'}" class="px-1.5 py-0.5 rounded ${isSubmitted ? 'bg-emerald-50 text-emerald-700 font-medium' : 'bg-gray-200 text-gray-500'}">
+                                    ${isSubmitted ? 'Реестр жўнатилди' : 'Реестр жўнатилмади'}
+                                </span>
+                            `;
+                        } else {
+                            badgesHtml = `<span class="text-[10px] text-gray-400 italic">Қайдлар мавжуд</span>`;
+                        }
+
                         firmsHtml += `
                             <div class="bg-gray-50/80 p-1.5 rounded-lg border border-gray-100 text-[10px] space-y-1">
                                 <div class="flex items-center justify-between">
                                     <span class="font-bold text-gray-700 truncate max-w-[110px]">${firm.name}</span>
                                     <div class="flex items-center space-x-1">
-                                        <span title="${isSubmitted ? 'Топширилган' : 'Топширилмаган'}" class="px-1.5 py-0.5 rounded ${isSubmitted ? 'bg-emerald-50 text-emerald-700 font-medium' : 'bg-gray-200 text-gray-500'}">
-                                            ${isSubmitted ? 'Топширилди' : 'Топширилмади'}
-                                        </span>
-                                        <span title="${isPaid ? 'Тўлов қилинди' : 'Тўлов қилинмади'}" class="px-1.5 py-0.5 rounded ${isPaid ? 'bg-blue-50 text-blue-700 font-medium' : 'bg-gray-200 text-gray-500'}">
-                                            ${isPaid ? 'Тўланди' : 'Тўланмади'}
-                                        </span>
+                                        ${badgesHtml}
                                     </div>
                                 </div>
                                 ${firmNote ? `<div class="text-[9px] text-indigo-600 truncate italic">Қайд: ${firmNote}</div>` : ''}
@@ -474,11 +498,12 @@
                             <div class="flex items-start justify-between gap-2 mb-2">
                                 <input type="checkbox" ${t.completed ? 'checked' : ''} onclick="event.stopPropagation()" onchange="toggleTask(${t.id})" class="w-5 h-5 text-indigo-600 rounded border-gray-300 focus:ring-indigo-500 cursor-pointer mt-0.5 flex-shrink-0" title="Умумий бажарилди">
                                 <div class="flex items-center space-x-1">
-                                    ${t.important ? '<span class="text-[10px] bg-red-50 text-red-600 px-2 py-0.5 rounded-full font-medium">Муҳим</span>' : ''}
+                                    ${typeBadge}
+                                    ${t.important ? '<span class="text-[9px] bg-red-50 text-red-600 px-2 py-0.5 rounded-full font-medium">Муҳим</span>' : ''}
                                 </div>
                             </div>
-                            <h3 class="font-semibold text-gray-800 text-sm mb-1 line-clamp-2 ${t.completed ? 'line-through text-gray-400' : ''}">${t.title}</h3>
-                            <p class="text-xs text-gray-500 line-clamp-2 mb-3 ${t.completed ? 'text-gray-300' : ''}">${t.desc || 'Тавсиф мавжуд эмас'}</p>
+                            <h3 class="font-semibold text-gray-800 text-xs sm:text-sm mb-1 line-clamp-2 ${t.completed ? 'line-through text-gray-400' : ''}">${t.title}</h3>
+                            <p class="text-[11px] sm:text-xs text-gray-500 line-clamp-2 mb-3 ${t.completed ? 'text-gray-300' : ''}">${t.desc || 'Тавсиф мавжуд эмас'}</p>
                             
                             ${firmsHtml}
                         </div>
@@ -576,13 +601,13 @@
                     <div class="${c.bg} p-5 rounded-2xl border ${c.border} shadow-sm flex flex-col justify-between relative group">
                         <div>
                             <div class="flex justify-between items-start mb-2">
-                                <h3 class="font-bold ${c.title}">${n.title}</h3>
+                                <h3 class="font-bold ${c.title} text-sm sm:text-base">${n.title}</h3>
                                 <div class="flex space-x-1 opacity-0 group-hover:opacity-100 transition-opacity">
                                     <button onclick="openEditNoteModal(${n.id})" class="p-1.5 text-gray-600 hover:text-gray-900 rounded-lg hover:bg-black/5"><i class="fa-solid fa-pen text-xs"></i></button>
                                     <button onclick="deleteNote(${n.id})" class="p-1.5 text-red-600 hover:text-red-900 rounded-lg hover:bg-black/5"><i class="fa-solid fa-trash text-xs"></i></button>
                                 </div>
                             </div>
-                            <p class="text-sm ${c.text} whitespace-pre-wrap leading-relaxed">${n.desc}</p>
+                            <p class="text-xs sm:text-sm ${c.text} whitespace-pre-wrap leading-relaxed">${n.desc}</p>
                         </div>
                     </div>
                 `;
@@ -618,7 +643,7 @@
 
             for (let i = adjustedFirstDay - 1; i >= 0; i--) {
                 const dayNum = prevTotalDays - i;
-                daysContainer.innerHTML += `<div class="p-3 text-center text-gray-300 text-sm rounded-xl">${dayNum}</div>`;
+                daysContainer.innerHTML += `<div class="p-3 text-center text-gray-300 text-xs sm:text-sm rounded-xl">${dayNum}</div>`;
             }
 
             const todayStr = new Date().toISOString().split('T')[0];
@@ -630,7 +655,7 @@
                 const isToday = dateStr === todayStr;
                 const hasEvents = state.calendarEvents[dateStr] && state.calendarEvents[dateStr].length > 0;
 
-                let classes = "p-3 text-center text-sm rounded-xl font-medium cursor-pointer transition-all flex flex-col items-center justify-center relative ";
+                let classes = "p-3 text-center text-xs sm:text-sm rounded-xl font-medium cursor-pointer transition-all flex flex-col items-center justify-center relative ";
                 if (isSelected) {
                     classes += "bg-indigo-600 text-white shadow-md";
                 } else if (isToday) {
@@ -683,15 +708,15 @@
             const events = state.calendarEvents[state.selectedDate] || [];
 
             if (events.length === 0) {
-                eventsContainer.innerHTML = `<p class="text-gray-400 text-sm italic">Ушбу сана учун тадбирлар белгиланмаган.</p>`;
+                eventsContainer.innerHTML = `<p class="text-gray-400 text-xs sm:text-sm italic">Ушбу сана учун тадбирлар белгиланмаган.</p>`;
                 return;
             }
 
             eventsContainer.innerHTML = events.map(e => `
                 <div class="flex items-center justify-between bg-gray-50 p-3 rounded-xl border border-gray-100">
                     <div class="flex items-center space-x-3">
-                        <span class="text-xs bg-indigo-100 text-indigo-700 px-2.5 py-1 rounded-lg font-semibold">${e.time || 'Бутун кун'}</span>
-                        <span class="text-sm font-medium text-gray-800">${e.title}</span>
+                        <span class="text-[11px] sm:text-xs bg-indigo-100 text-indigo-700 px-2.5 py-1 rounded-lg font-semibold">${e.time || 'Бутун кун'}</span>
+                        <span class="text-xs sm:text-sm font-medium text-gray-800">${e.title}</span>
                     </div>
                     <button onclick="deleteCalendarEvent('${state.selectedDate}', ${e.id})" class="text-gray-400 hover:text-red-600 text-xs p-1"><i class="fa-solid fa-trash"></i></button>
                 </div>
@@ -729,8 +754,8 @@
                                 <i class="fa-solid ${ic.icon}"></i>
                             </div>
                             <div class="min-w-0">
-                                <h3 class="font-semibold text-gray-800 truncate text-sm">${f.name}</h3>
-                                <p class="text-xs text-gray-400 mt-0.5">${f.size} &bull; ${f.date}</p>
+                                <h3 class="font-semibold text-gray-800 truncate text-xs sm:text-sm">${f.name}</h3>
+                                <p class="text-[11px] sm:text-xs text-gray-400 mt-0.5">${f.size} &bull; ${f.date}</p>
                             </div>
                         </div>
                         <div class="flex items-center space-x-1 opacity-0 group-hover:opacity-100 transition-opacity">
@@ -789,11 +814,11 @@
                 <div class="bg-white p-6 rounded-2xl border border-gray-100 shadow-sm space-y-3">
                     <div class="flex items-start justify-between gap-4">
                         <div>
-                            <span class="text-xs font-semibold px-2.5 py-1 rounded-full bg-indigo-50 text-indigo-700">${l.article}</span>
-                            <h3 class="font-bold text-gray-900 text-lg mt-2">${l.title}</h3>
+                            <span class="text-[11px] sm:text-xs font-semibold px-2.5 py-1 rounded-full bg-indigo-50 text-indigo-700">${l.article}</span>
+                            <h3 class="font-bold text-gray-900 text-base sm:text-lg mt-2">${l.title}</h3>
                         </div>
                     </div>
-                    <p class="text-gray-600 text-sm leading-relaxed">${l.desc}</p>
+                    <p class="text-gray-600 text-xs sm:text-sm leading-relaxed">${l.desc}</p>
                 </div>
             `).join('');
         }
@@ -817,8 +842,8 @@
             let firmsHtml = state.firms.map(f => `
                 <div class="flex items-center justify-between bg-gray-50 p-3 rounded-xl border border-gray-100">
                     <div>
-                        <h4 class="font-bold text-gray-800 text-sm">${f.name}</h4>
-                        <p class="text-xs text-gray-400">СТИР (ИНН): ${f.tin || 'Кўрсатилмаган'}</p>
+                        <h4 class="font-bold text-gray-800 text-xs sm:text-sm">${f.name}</h4>
+                        <p class="text-[11px] sm:text-xs text-gray-400">СТИР (ИНН): ${f.tin || 'Кўрсатилмаган'}</p>
                     </div>
                     <button onclick="deleteFirm(${f.id})" class="text-gray-400 hover:text-red-600 p-1.5 rounded-lg hover:bg-white"><i class="fa-solid fa-trash text-xs"></i></button>
                 </div>
@@ -827,20 +852,20 @@
             document.getElementById('modal-body-content').innerHTML = `
                 <div class="space-y-4">
                     <div class="space-y-2 max-h-48 overflow-y-auto custom-scrollbar pr-1">
-                        ${firmsHtml || '<p class="text-gray-400 text-sm">Фирмалар қўшилмаган</p>'}
+                        ${firmsHtml || '<p class="text-gray-400 text-xs sm:text-sm">Фирмалар қўшилмаган</p>'}
                     </div>
                     <div class="pt-4 border-t border-gray-100 space-y-3">
                         <h4 class="font-bold text-xs text-gray-700 uppercase">Янги фирма қўшиш</h4>
                         <div>
-                            <input type="text" id="new-firm-name" placeholder="Фирма номи (масалан: MCHJ ...)" class="w-full bg-gray-50 border border-gray-200 rounded-xl px-4 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500 mb-2">
-                            <input type="text" id="new-firm-tin" placeholder="СТИР (ИНН) - 9 хонали" class="w-full bg-gray-50 border border-gray-200 rounded-xl px-4 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500">
+                            <input type="text" id="new-firm-name" placeholder="Фирма номи (масалан: MCHJ ...)" class="w-full bg-gray-50 border border-gray-200 rounded-xl px-4 py-2 text-xs sm:text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500 mb-2">
+                            <input type="text" id="new-firm-tin" placeholder="СТИР (ИНН) - 9 хонали" class="w-full bg-gray-50 border border-gray-200 rounded-xl px-4 py-2 text-xs sm:text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500">
                         </div>
                         <div class="flex justify-end space-x-2">
                             <button onclick="addNewFirm()" class="px-4 py-2 bg-indigo-600 hover:bg-indigo-700 text-white rounded-xl text-xs font-medium">Қўшиш</button>
                         </div>
                     </div>
                     <div class="flex justify-end pt-2">
-                        <button onclick="closeModal()" class="px-4 py-2 bg-gray-100 hover:bg-gray-200 text-gray-700 rounded-xl text-sm font-medium">Ёпиш</button>
+                        <button onclick="closeModal()" class="px-4 py-2 bg-gray-100 hover:bg-gray-200 text-gray-700 rounded-xl text-xs sm:text-sm font-medium">Ёпиш</button>
                     </div>
                 </div>
             `;
@@ -862,7 +887,6 @@
 
         function deleteFirm(id) {
             state.firms = state.firms.filter(f => f.id !== id);
-            // Remove firm reference from tasks
             state.tasks.forEach(t => {
                 if (t.firmIds) t.firmIds = t.firmIds.filter(fId => fId !== id);
                 if (t.submittedFirms) t.submittedFirms = t.submittedFirms.filter(fId => fId !== id);
@@ -878,7 +902,7 @@
 
         function openTaskAddModal(editId = null) {
             const isEdit = editId !== null;
-            let task = isEdit ? state.tasks.find(t => t.id === editId) : { title: '', desc: '', important: false, date: new Date().toISOString().split('T')[0], firmIds: [], submittedFirms: [] };
+            let task = isEdit ? state.tasks.find(t => t.id === editId) : { title: '', desc: '', important: false, date: new Date().toISOString().split('T')[0], taskType: 'tax_report', firmIds: [], submittedFirms: [], paidFirms: [] };
 
             let firmCheckboxes = state.firms.map(f => {
                 const checked = task.firmIds && task.firmIds.includes(f.id) ? 'checked' : '';
@@ -894,46 +918,48 @@
             document.getElementById('modal-body-content').innerHTML = `
                 <div class="space-y-4">
                     <div>
+                        <label class="block text-xs font-semibold text-gray-600 mb-1">Вазифа тури</label>
+                        <select id="modal-task-type" class="w-full bg-gray-50 border border-gray-200 rounded-xl px-4 py-2.5 text-xs sm:text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500">
+                            <option value="tax_report" ${task.taskType === 'tax_report' ? 'selected' : ''}>Солиқ ҳисоботи (Топширилди / Тўлов қилинди)</option>
+                            <option value="inps" ${task.taskType === 'inps' ? 'selected' : ''}>ИНПС (Тўлов қилинди / Реестр жўнатилди)</option>
+                            <option value="general" ${task.taskType === 'general' ? 'selected' : ''}>Умумий вазифа (Ҳисобот/Тўлов статусларисиз)</option>
+                        </select>
+                    </div>
+                    <div>
                         <label class="block text-xs font-semibold text-gray-600 mb-1">Сарлавҳа</label>
-                        <input type="text" id="modal-task-title" value="${task.title}" class="w-full bg-gray-50 border border-gray-200 rounded-xl px-4 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500" placeholder="Масалан: Даромад солиғи ҳисоботини топшириш">
+                        <input type="text" id="modal-task-title" value="${task.title}" class="w-full bg-gray-50 border border-gray-200 rounded-xl px-4 py-2.5 text-xs sm:text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500" placeholder="Масалан: Даромад солиғи ҳисоботини топшириш">
                     </div>
                     <div>
                         <label class="block text-xs font-semibold text-gray-600 mb-1">Тавсиф</label>
-                        <textarea id="modal-task-desc" rows="2" class="w-full bg-gray-50 border border-gray-200 rounded-xl px-4 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500">${task.desc}</textarea>
+                        <textarea id="modal-task-desc" rows="2" class="w-full bg-gray-50 border border-gray-200 rounded-xl px-4 py-2.5 text-xs sm:text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500">${task.desc}</textarea>
                     </div>
                     <div>
-                        <label class="block text-xs font-semibold text-gray-600 mb-1">Кайси фирмаларга тегишли?</label>
+                        <label class="block text-xs font-semibold text-gray-600 mb-1">Қайси фирмаларга тегишли?</label>
                         <div class="grid grid-cols-2 gap-2 max-h-36 overflow-y-auto custom-scrollbar">
                             ${firmCheckboxes || '<span class="text-xs text-gray-400">Аввал фирмаларни қўшинг</span>'}
                         </div>
                     </div>
                     <div>
                         <label class="block text-xs font-semibold text-gray-600 mb-1">Бажариш муддати (Сана)</label>
-                        <input type="date" id="modal-task-date" value="${task.date || new Date().toISOString().split('T')[0]}" class="w-full bg-gray-50 border border-gray-200 rounded-xl px-4 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500">
+                        <input type="date" id="modal-task-date" value="${task.date || new Date().toISOString().split('T')[0]}" class="w-full bg-gray-50 border border-gray-200 rounded-xl px-4 py-2.5 text-xs sm:text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500">
                     </div>
                     <div class="flex items-center space-x-2">
                         <input type="checkbox" id="modal-task-important" ${task.important ? 'checked' : ''} class="w-4 h-4 text-indigo-600 rounded border-gray-300">
-                        <label for="modal-task-important" class="text-sm font-medium text-gray-700">Муҳим вазифа сифатида белгилаш</label>
+                        <label for="modal-task-important" class="text-xs sm:text-sm font-medium text-gray-700">Муҳим вазифа сифатида белгилаш</label>
                     </div>
                     <div class="flex justify-end space-x-3 pt-4 border-t border-gray-100">
-                        <button onclick="closeModal()" class="px-4 py-2 rounded-xl text-gray-600 hover:bg-gray-100 text-sm font-medium">Бекор қилиш</button>
-                        <button onclick="saveTask(${isEdit ? editId : 'null'})" class="px-5 py-2 rounded-xl bg-indigo-600 hover:bg-indigo-700 text-white text-sm font-medium shadow-md">Сақлаш</button>
+                        <button onclick="closeModal()" class="px-4 py-2 rounded-xl text-gray-600 hover:bg-gray-100 text-xs sm:text-sm font-medium">Бекор қилиш</button>
+                        <button onclick="saveTask(${isEdit ? editId : 'null'})" class="px-5 py-2 rounded-xl bg-indigo-600 hover:bg-indigo-700 text-white text-xs sm:text-sm font-medium shadow-md">Сақлаш</button>
                     </div>
                 </div>
             `;
             document.getElementById('generic-modal').classList.remove('hidden');
         }
 
-        function openEditTaskModal(id) {
-            openTaskAddModal(id);
-        }
-
-        // Вазифа батафсил очилиш ва у ерда фирмаларга белги ва қайдлар ёзиш ойнаси
         function openTaskDetailModal(id, preserveScroll = false) {
             const task = state.tasks.find(t => t.id === id);
             if (!task) return;
 
-            // Save previous scroll position of the firms list if requested
             let prevScrollTop = 0;
             const containerEl = document.getElementById('firms-detail-container');
             if (preserveScroll && containerEl) {
@@ -942,6 +968,10 @@
 
             document.getElementById('modal-main-title').innerText = "Вазифа тафсилотлари ва фирмалар ҳолати";
             
+            let typeLabel = 'Умумий вазифа';
+            if (task.taskType === 'tax_report') typeLabel = 'Солиқ ҳисоботи';
+            else if (task.taskType === 'inps') typeLabel = 'ИНПС / Реестр';
+
             let firmsDetailHtml = '';
             if (task.firmIds && task.firmIds.length > 0) {
                 firmsDetailHtml = task.firmIds.map(fId => {
@@ -951,49 +981,67 @@
                     const isPaid = task.paidFirms && task.paidFirms.includes(fId);
                     const firmNote = (task.firmNotes && task.firmNotes[fId]) ? task.firmNotes[fId] : '';
                     
+                    let actionButtonsHtml = '';
+                    if (task.taskType === 'tax_report') {
+                        actionButtonsHtml = `
+                            <button onclick="toggleFirmSubmissionFromDetail(${task.id}, ${fId})" class="px-3 py-1.5 rounded-lg text-[11px] sm:text-xs font-medium transition-all flex items-center space-x-1.5 ${isSubmitted ? 'bg-emerald-600 text-white shadow-sm' : 'bg-white border border-gray-200 text-gray-600 hover:bg-gray-100'}">
+                                <i class="fa-solid ${isSubmitted ? 'fa-check' : 'fa-clock'}"></i>
+                                <span>${isSubmitted ? 'Топширилди' : 'Топширилмади'}</span>
+                            </button>
+                            <button onclick="toggleFirmPaymentFromDetail(${task.id}, ${fId})" class="px-3 py-1.5 rounded-lg text-[11px] sm:text-xs font-medium transition-all flex items-center space-x-1.5 ${isPaid ? 'bg-blue-600 text-white shadow-sm' : 'bg-white border border-gray-200 text-gray-600 hover:bg-gray-100'}">
+                                <i class="fa-solid ${isPaid ? 'fa-wallet' : 'fa-circle-dollar-to-slot'}"></i>
+                                <span>${isPaid ? 'Тўлов қилинди' : 'Тўлов қилинмади'}</span>
+                            </button>
+                        `;
+                    } else if (task.taskType === 'inps') {
+                        actionButtonsHtml = `
+                            <button onclick="toggleFirmPaymentFromDetail(${task.id}, ${fId})" class="px-3 py-1.5 rounded-lg text-[11px] sm:text-xs font-medium transition-all flex items-center space-x-1.5 ${isPaid ? 'bg-blue-600 text-white shadow-sm' : 'bg-white border border-gray-200 text-gray-600 hover:bg-gray-100'}">
+                                <i class="fa-solid ${isPaid ? 'fa-wallet' : 'fa-circle-dollar-to-slot'}"></i>
+                                <span>${isPaid ? 'Тўлов қилинди' : 'Тўлов қилинмади'}</span>
+                            </button>
+                            <button onclick="toggleFirmSubmissionFromDetail(${task.id}, ${fId})" class="px-3 py-1.5 rounded-lg text-[11px] sm:text-xs font-medium transition-all flex items-center space-x-1.5 ${isSubmitted ? 'bg-emerald-600 text-white shadow-sm' : 'bg-white border border-gray-200 text-gray-600 hover:bg-gray-100'}">
+                                <i class="fa-solid ${isSubmitted ? 'fa-paper-plane' : 'fa-clock'}"></i>
+                                <span>${isSubmitted ? 'Реестр жўнатилди' : 'Реестр жўнатилмади'}</span>
+                            </button>
+                        `;
+                    } else {
+                        actionButtonsHtml = `<span class="text-xs text-gray-400 italic">Қўшимча ҳисобот/тўлов талаб этилмайди</span>`;
+                    }
+
                     return `
                         <div class="bg-gray-50 p-4 rounded-xl border border-gray-100 space-y-3">
                             <div class="flex items-center justify-between">
                                 <div>
-                                    <h4 class="font-bold text-gray-800 text-sm">${firm.name}</h4>
-                                    <p class="text-xs text-gray-400">СТИР: ${firm.tin || 'Кўрсатилмаган'}</p>
+                                    <h4 class="font-bold text-gray-800 text-xs sm:text-sm">${firm.name}</h4>
+                                    <p class="text-[11px] sm:text-xs text-gray-400">СТИР: ${firm.tin || 'Кўрсатилмаган'}</p>
                                 </div>
                                 <div class="flex items-center space-x-2">
-                                    <button onclick="toggleFirmSubmissionFromDetail(${task.id}, ${fId})" class="px-3 py-1.5 rounded-lg text-xs font-medium transition-all flex items-center space-x-1.5 ${isSubmitted ? 'bg-emerald-600 text-white shadow-sm' : 'bg-white border border-gray-200 text-gray-600 hover:bg-gray-100'}">
-                                        <i class="fa-solid ${isSubmitted ? 'fa-check' : 'fa-clock'}"></i>
-                                        <span>${isSubmitted ? 'Топширилди' : 'Топширилмади'}</span>
-                                    </button>
-                                    <button onclick="toggleFirmPaymentFromDetail(${task.id}, ${fId})" class="px-3 py-1.5 rounded-lg text-xs font-medium transition-all flex items-center space-x-1.5 ${isPaid ? 'bg-blue-600 text-white shadow-sm' : 'bg-white border border-gray-200 text-gray-600 hover:bg-gray-100'}">
-                                        <i class="fa-solid ${isPaid ? 'fa-wallet' : 'fa-circle-dollar-to-slot'}"></i>
-                                        <span>${isPaid ? 'Тўлов қилинди' : 'Тўлов қилинмади'}</span>
-                                    </button>
+                                    ${actionButtonsHtml}
                                 </div>
                             </div>
                             <div>
-                                <textarea rows="2" oninput="saveFirmNoteInput(${task.id}, ${fId}, this.value)" placeholder="Ушбу фирма бўйича қайд ва изоҳлар (Enter босиб янги қаторга ўтиш мумкин)..." class="w-full bg-white border border-gray-200 rounded-lg px-3 py-1.5 text-xs focus:outline-none focus:ring-1 focus:ring-indigo-500 text-gray-700 resize-y">${firmNote}</textarea>
+                                <textarea rows="2" oninput="saveFirmNoteInput(${task.id}, ${fId}, this.value)" placeholder="Ушбу фирма бўйича қайд ва изоҳлар..." class="w-full bg-white border border-gray-200 rounded-lg px-3 py-1.5 text-xs focus:outline-none focus:ring-1 focus:ring-indigo-500 text-gray-700 resize-y">${firmNote}</textarea>
                             </div>
                         </div>
                     `;
                 }).join('');
             } else {
-                firmsDetailHtml = `<p class="text-gray-400 text-sm italic">Ушбу вазифага ҳеч қандай фирма бириктирилмаган.</p>`;
+                firmsDetailHtml = `<p class="text-gray-400 text-xs sm:text-sm italic">Ушбу вазифага ҳеч қандай фирма бириктирилмаган.</p>`;
             }
 
             document.getElementById('modal-body-content').innerHTML = `
                 <div class="space-y-6">
-                    <!-- Вазифа асосий маълумоти -->
                     <div class="bg-indigo-50/50 p-4 rounded-2xl border border-indigo-100/60 space-y-2">
                         <div class="flex items-center justify-between">
-                            <span class="text-xs font-semibold px-2.5 py-1 rounded-full ${task.important ? 'bg-red-100 text-red-700' : 'bg-gray-200 text-gray-700'}">${task.important ? 'Муҳим вазифа' : 'Оддий вазифа'}</span>
+                            <span class="text-[11px] font-semibold px-2.5 py-1 rounded-full ${task.important ? 'bg-red-100 text-red-700' : 'bg-gray-200 text-gray-700'}">${typeLabel}</span>
                             <span class="text-xs text-indigo-600 font-semibold"><i class="fa-regular fa-calendar mr-1"></i>Мўлжал: ${task.date || 'Белгиланмаган'}</span>
                         </div>
-                        <h3 class="font-bold text-gray-900 text-lg">${task.title}</h3>
-                        <p class="text-xs text-gray-600 leading-relaxed whitespace-pre-wrap">${task.desc || 'Тавсиф мавжуд эмас'}</p>
+                        <h3 class="font-bold text-gray-900 text-base sm:text-lg">${task.title}</h3>
+                        <p class="text-xs sm:text-sm text-gray-600 leading-relaxed whitespace-pre-wrap">${task.desc || 'Тавсиф мавжуд эмас'}</p>
                     </div>
 
-                    <!-- Фирмалар кесимида ҳисобот, тўлов ва қайдлар -->
                     <div class="space-y-3">
-                        <h4 class="font-bold text-xs text-gray-700 uppercase tracking-wider">Фирмалар кесимида ҳисобот, тўлов ва шахсий қайдлар</h4>
+                        <h4 class="font-bold text-xs text-gray-700 uppercase tracking-wider">Фирмалар кесимида статус ва шахсий қайдлар</h4>
                         <div id="firms-detail-container" class="space-y-3 max-h-64 overflow-y-auto custom-scrollbar pr-1">
                             ${firmsDetailHtml}
                         </div>
@@ -1004,14 +1052,13 @@
                             <i class="fa-solid fa-pen"></i><span>Вазифани таҳрирлаш</span>
                         </button>
                         <div class="flex space-x-2">
-                            <button onclick="closeModal(); renderTasks();" class="px-5 py-2 rounded-xl bg-indigo-600 hover:bg-indigo-700 text-white text-sm font-medium shadow-md">Сақлаш ва ёпиш</button>
+                            <button onclick="closeModal(); renderTasks();" class="px-5 py-2 rounded-xl bg-indigo-600 hover:bg-indigo-700 text-white text-xs sm:text-sm font-medium shadow-md">Сақлаш ва ёпиш</button>
                         </div>
                     </div>
                 </div>
             `;
             document.getElementById('generic-modal').classList.remove('hidden');
 
-            // Restore scroll position
             if (preserveScroll) {
                 const newContainer = document.getElementById('firms-detail-container');
                 if (newContainer) {
@@ -1022,18 +1069,19 @@
 
         function toggleFirmSubmissionFromDetail(taskId, firmId) {
             toggleFirmSubmission(taskId, firmId);
-            openTaskDetailModal(taskId, true); // Refresh detail modal view preserving scroll
+            openTaskDetailModal(taskId, true);
         }
 
         function toggleFirmPaymentFromDetail(taskId, firmId) {
             toggleFirmPayment(taskId, firmId);
-            openTaskDetailModal(taskId, true); // Refresh detail modal view preserving scroll
+            openTaskDetailModal(taskId, true);
         }
 
         function saveTask(id) {
             const title = document.getElementById('modal-task-title').value.trim();
             const desc = document.getElementById('modal-task-desc').value.trim();
             const date = document.getElementById('modal-task-date').value;
+            const taskType = document.getElementById('modal-task-type').value;
             const important = document.getElementById('modal-task-important').checked;
             
             const firmCheckboxes = document.querySelectorAll('.task-firm-checkbox:checked');
@@ -1052,6 +1100,7 @@
                     completed: false,
                     important,
                     date: date || new Date().toISOString().split('T')[0],
+                    taskType,
                     firmIds,
                     submittedFirms: [],
                     paidFirms: [],
@@ -1065,6 +1114,7 @@
                     task.desc = desc;
                     task.important = important;
                     task.date = date;
+                    task.taskType = taskType;
                     task.firmIds = firmIds;
                     if (!task.submittedFirms) task.submittedFirms = [];
                     if (!task.paidFirms) task.paidFirms = [];
@@ -1089,15 +1139,15 @@
                 <div class="space-y-4">
                     <div>
                         <label class="block text-xs font-semibold text-gray-600 mb-1">Сарлавҳа</label>
-                        <input type="text" id="modal-note-title" value="${note.title}" class="w-full bg-gray-50 border border-gray-200 rounded-xl px-4 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500">
+                        <input type="text" id="modal-note-title" value="${note.title}" class="w-full bg-gray-50 border border-gray-200 rounded-xl px-4 py-2.5 text-xs sm:text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500">
                     </div>
                     <div>
                         <label class="block text-xs font-semibold text-gray-600 mb-1">Матн</label>
-                        <textarea id="modal-note-desc" rows="4" class="w-full bg-gray-50 border border-gray-200 rounded-xl px-4 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500">${note.desc}</textarea>
+                        <textarea id="modal-note-desc" rows="4" class="w-full bg-gray-50 border border-gray-200 rounded-xl px-4 py-2.5 text-xs sm:text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500">${note.desc}</textarea>
                     </div>
                     <div>
                         <label class="block text-xs font-semibold text-gray-600 mb-1">Ранг туси</label>
-                        <select id="modal-note-color" class="w-full bg-gray-50 border border-gray-200 rounded-xl px-4 py-2.5 text-sm focus:outline-none">
+                        <select id="modal-note-color" class="w-full bg-gray-50 border border-gray-200 rounded-xl px-4 py-2.5 text-xs sm:text-sm focus:outline-none">
                             <option value="amber" ${note.color === 'amber' ? 'selected' : ''}>Сариқ (Огоҳлантириш)</option>
                             <option value="blue" ${note.color === 'blue' ? 'selected' : ''}>Кўк (Маълумот)</option>
                             <option value="purple" ${note.color === 'purple' ? 'selected' : ''}>Бинафша (Шахсий)</option>
@@ -1106,8 +1156,8 @@
                         </select>
                     </div>
                     <div class="flex justify-end space-x-3 pt-4 border-t border-gray-100">
-                        <button onclick="closeModal()" class="px-4 py-2 rounded-xl text-gray-600 hover:bg-gray-100 text-sm font-medium">Бекор қилиш</button>
-                        <button onclick="saveNote(${isEdit ? editId : 'null'})" class="px-5 py-2 rounded-xl bg-indigo-600 hover:bg-indigo-700 text-white text-sm font-medium shadow-md">Сақлаш</button>
+                        <button onclick="closeModal()" class="px-4 py-2 rounded-xl text-gray-600 hover:bg-gray-100 text-xs sm:text-sm font-medium">Бекор қилиш</button>
+                        <button onclick="saveNote(${isEdit ? editId : 'null'})" class="px-5 py-2 rounded-xl bg-indigo-600 hover:bg-indigo-700 text-white text-xs sm:text-sm font-medium shadow-md">Сақлаш</button>
                     </div>
                 </div>
             `;
@@ -1150,15 +1200,15 @@
                 <div class="space-y-4">
                     <div>
                         <label class="block text-xs font-semibold text-gray-600 mb-1">Тадбир номи</label>
-                        <input type="text" id="modal-event-title" class="w-full bg-gray-50 border border-gray-200 rounded-xl px-4 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500" placeholder="Масалан: Раҳбарият билан учрашув">
+                        <input type="text" id="modal-event-title" class="w-full bg-gray-50 border border-gray-200 rounded-xl px-4 py-2.5 text-xs sm:text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500" placeholder="Масалан: Раҳбарият билан учрашув">
                     </div>
                     <div>
                         <label class="block text-xs font-semibold text-gray-600 mb-1">Вақти</label>
-                        <input type="time" id="modal-event-time" value="10:00" class="w-full bg-gray-50 border border-gray-200 rounded-xl px-4 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500">
+                        <input type="time" id="modal-event-time" value="10:00" class="w-full bg-gray-50 border border-gray-200 rounded-xl px-4 py-2.5 text-xs sm:text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500">
                     </div>
                     <div class="flex justify-end space-x-3 pt-4 border-t border-gray-100">
-                        <button onclick="closeModal()" class="px-4 py-2 rounded-xl text-gray-600 hover:bg-gray-100 text-sm font-medium">Бекор қилиш</button>
-                        <button onclick="saveCalendarEvent()" class="px-5 py-2 rounded-xl bg-indigo-600 hover:bg-indigo-700 text-white text-sm font-medium shadow-md">Қўшиш</button>
+                        <button onclick="closeModal()" class="px-4 py-2 rounded-xl text-gray-600 hover:bg-gray-100 text-xs sm:text-sm font-medium">Бекор қилиш</button>
+                        <button onclick="saveCalendarEvent()" class="px-5 py-2 rounded-xl bg-indigo-600 hover:bg-indigo-700 text-white text-xs sm:text-sm font-medium shadow-md">Қўшиш</button>
                     </div>
                 </div>
             `;
@@ -1195,11 +1245,11 @@
                 <div class="space-y-4">
                     <div>
                         <label class="block text-xs font-semibold text-gray-600 mb-1">Ҳужжат номи</label>
-                        <input type="text" id="modal-file-name" class="w-full bg-gray-50 border border-gray-200 rounded-xl px-4 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500" placeholder="Масалан: Ҳисобот_2026.pdf">
+                        <input type="text" id="modal-file-name" class="w-full bg-gray-50 border border-gray-200 rounded-xl px-4 py-2.5 text-xs sm:text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500" placeholder="Масалан: Ҳисобот_2026.pdf">
                     </div>
                     <div>
                         <label class="block text-xs font-semibold text-gray-600 mb-1">Файл формати</label>
-                        <select id="modal-file-type" class="w-full bg-gray-50 border border-gray-200 rounded-xl px-4 py-2.5 text-sm focus:outline-none">
+                        <select id="modal-file-type" class="w-full bg-gray-50 border border-gray-200 rounded-xl px-4 py-2.5 text-xs sm:text-sm focus:outline-none">
                             <option value="pdf">PDF ҳужжат</option>
                             <option value="word">Word (docx)</option>
                             <option value="excel">Excel (xlsx)</option>
@@ -1210,41 +1260,8 @@
                         <p class="text-xs text-gray-500">Юклаш учун файлни шу ерга ташланг ёки танланг</p>
                     </div>
                     <div class="flex justify-end space-x-3 pt-4 border-t border-gray-100">
-                        <button onclick="closeModal()" class="px-4 py-2 rounded-xl text-gray-600 hover:bg-gray-100 text-sm font-medium">Бекор қилиш</button>
-                        <button onclick="saveFile()" class="px-5 py-2 rounded-xl bg-indigo-600 hover:bg-indigo-700 text-white text-sm font-medium shadow-md">Юклаш</button>
-                    </div>
-                </div>
-            `;
-            document.getElementById('generic-modal').classList.remove('hidden');
-        }
-
-        // Интернетда бепул ва осон очиш бўйича кўрсатмалар модали
-        function openHostingGuideModal() {
-            document.getElementById('modal-main-title').innerText = "Веб иловани интернетда (онлайн) ишлатиш";
-            document.getElementById('modal-body-content').innerHTML = `
-                <div class="space-y-4 text-sm text-gray-700">
-                    <p class="leading-relaxed">Ушбу илова битта тўлиқ <strong>HTML</strong> файлдан иборат бўлиб, унда сервер шарт эмас — барча маълумотларингиз браузерингизда (` + `localStorage` + `) сақланади. Уни интернетда бепул ва тез очтиришнинг энг қулай усуллари:</p>
-                    
-                    <div class="space-y-3 pt-2">
-                        <div class="bg-gray-50 p-3.5 rounded-xl border border-gray-200 space-y-1">
-                            <h4 class="font-bold text-gray-900 flex items-center space-x-2">
-                                <span class="w-6 h-6 rounded-full bg-indigo-600 text-white flex items-center justify-center text-xs">1</span>
-                                <span>Netlify Drop орқали (Энг тезкор - 5 сония)</span>
-                            </h4>
-                            <p class="text-xs text-gray-500 pl-8">Биринчи ўнг тарафдаги кодни компьютерингизга <code class="bg-gray-200 px-1 py-0.5 rounded">index.html</code> номи билан сақланг. Сўнг <a href="https://drop.netlify.com" target="_blank" class="text-indigo-600 underline font-semibold">drop.netlify.com</a> сайтига ўтиб, файлни у ерга ташланг. Сайт даҳо сизга тайёр ҳавола (link) беради ва уни телефонингиз ёки исталган қурилмада очишингиз мумкин!</p>
-                        </div>
-
-                        <div class="bg-gray-50 p-3.5 rounded-xl border border-gray-200 space-y-1">
-                            <h4 class="font-bold text-gray-900 flex items-center space-x-2">
-                                <span class="w-6 h-6 rounded-full bg-indigo-600 text-white flex items-center justify-center text-xs">2</span>
-                                <span>GitHub Pages ёки Vercel орқали</span>
-                            </h4>
-                            <p class="text-xs text-gray-500 pl-8">Файлни GitHub репозиторийсига юклаб, Pages функциясини ёқсангиз, ўз шахсий доменингизга эга бўласиз.</p>
-                        </div>
-                    </div>
-
-                    <div class="pt-3 border-t border-gray-100 flex justify-end">
-                        <button onclick="closeModal()" class="px-5 py-2 rounded-xl bg-indigo-600 text-white text-xs font-medium shadow-md">Тушунарли</button>
+                        <button onclick="closeModal()" class="px-4 py-2 rounded-xl text-gray-600 hover:bg-gray-100 text-xs sm:text-sm font-medium">Бекор қилиш</button>
+                        <button onclick="saveFile()" class="px-5 py-2 rounded-xl bg-indigo-600 hover:bg-indigo-700 text-white text-xs sm:text-sm font-medium shadow-md">Юклаш</button>
                     </div>
                 </div>
             `;
@@ -1275,7 +1292,7 @@
                 <div class="space-y-4">
                     <div>
                         <label class="block text-xs font-semibold text-gray-600 mb-1">Бўлим (Категория)</label>
-                        <select id="modal-law-cat" class="w-full bg-gray-50 border border-gray-200 rounded-xl px-4 py-2.5 text-sm focus:outline-none">
+                        <select id="modal-law-cat" class="w-full bg-gray-50 border border-gray-200 rounded-xl px-4 py-2.5 text-xs sm:text-sm focus:outline-none">
                             <option value="purchases">Давлат харидлари</option>
                             <option value="audits">Текширувлар</option>
                             <option value="finance">Молия ва Солиқ</option>
@@ -1283,19 +1300,19 @@
                     </div>
                     <div>
                         <label class="block text-xs font-semibold text-gray-600 mb-1">Қонун/Фармон номи</label>
-                        <input type="text" id="modal-law-title" class="w-full bg-gray-50 border border-gray-200 rounded-xl px-4 py-2.5 text-sm focus:outline-none" placeholder="Масалан: ЎРҚ-сонли Қонун">
+                        <input type="text" id="modal-law-title" class="w-full bg-gray-50 border border-gray-200 rounded-xl px-4 py-2.5 text-xs sm:text-sm focus:outline-none" placeholder="Масалан: ЎРҚ-сонли Қонун">
                     </div>
                     <div>
                         <label class="block text-xs font-semibold text-gray-600 mb-1">Модда / Банд</label>
-                        <input type="text" id="modal-law-article" class="w-full bg-gray-50 border border-gray-200 rounded-xl px-4 py-2.5 text-sm focus:outline-none" placeholder="Масалан: 10-модда. Асосий қоидалар">
+                        <input type="text" id="modal-law-article" class="w-full bg-gray-50 border border-gray-200 rounded-xl px-4 py-2.5 text-xs sm:text-sm focus:outline-none" placeholder="Масалан: 10-модда. Асосий қоидалар">
                     </div>
                     <div>
                         <label class="block text-xs font-semibold text-gray-600 mb-1">Қисқача мазмуни</label>
-                        <textarea id="modal-law-desc" rows="3" class="w-full bg-gray-50 border border-gray-200 rounded-xl px-4 py-2.5 text-sm focus:outline-none" placeholder="Норматив мазмунини киритинг..."></textarea>
+                        <textarea id="modal-law-desc" rows="3" class="w-full bg-gray-50 border border-gray-200 rounded-xl px-4 py-2.5 text-xs sm:text-sm focus:outline-none" placeholder="Норматив мазмунини киритинг..."></textarea>
                     </div>
                     <div class="flex justify-end space-x-3 pt-4 border-t border-gray-100">
-                        <button onclick="closeModal()" class="px-4 py-2 rounded-xl text-gray-600 hover:bg-gray-100 text-sm font-medium">Бекор қилиш</button>
-                        <button onclick="saveLaw()" class="px-5 py-2 rounded-xl bg-indigo-600 hover:bg-indigo-700 text-white text-sm font-medium shadow-md">Сақлаш</button>
+                        <button onclick="closeModal()" class="px-4 py-2 rounded-xl text-gray-600 hover:bg-gray-100 text-xs sm:text-sm font-medium">Бекор қилиш</button>
+                        <button onclick="saveLaw()" class="px-5 py-2 rounded-xl bg-indigo-600 hover:bg-indigo-700 text-white text-xs sm:text-sm font-medium shadow-md">Сақлаш</button>
                     </div>
                 </div>
             `;
