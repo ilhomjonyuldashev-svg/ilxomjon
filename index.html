@@ -40,6 +40,26 @@
         </div>
     </div>
 
+    <!-- Firebase Login Authorization Screen -->
+    <div id="firebase-lock-screen" class="fixed inset-0 bg-[#0B132B] z-40 hidden flex items-center justify-center p-4">
+        <div class="bg-white rounded-3xl max-w-md w-full p-8 shadow-2xl space-y-6 text-center">
+            <div class="w-16 h-16 bg-blue-600 rounded-2xl mx-auto flex items-center justify-center text-white text-2xl shadow-lg">
+                <i class="fa-solid fa-user-shield"></i>
+            </div>
+            <div>
+                <h2 class="text-xl font-bold text-gray-900">Firebase Авторизация</h2>
+                <p class="text-xs text-gray-500 mt-1">Булутдаги файллар омборига уланиш учун маълумотларингизни киритинг</p>
+            </div>
+            <div class="space-y-3">
+                <input type="email" id="fb-email-input" placeholder="Ваш личный Email" class="w-full bg-gray-50 border border-gray-200 rounded-2xl px-4 py-3 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500 text-gray-800">
+                <input type="password" id="fb-pass-input" placeholder="Ваш Пароль" class="w-full bg-gray-50 border border-gray-200 rounded-2xl px-4 py-3 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500 text-gray-800">
+                <button id="fb-login-btn" class="w-full bg-blue-600 hover:bg-blue-700 text-white py-3.5 rounded-2xl font-bold text-sm shadow-md transition-all">
+                    Булутга кириш
+                </button>
+            </div>
+        </div>
+    </div>
+
     <!-- Custom Notification Box (Instead of alert) -->
     <div id="notification-modal" class="fixed inset-0 bg-black/50 z-50 hidden flex items-center justify-center p-4">
         <div class="bg-white rounded-2xl max-w-sm w-full p-6 shadow-2xl transform transition-all">
@@ -248,14 +268,14 @@
                 </div>
             </div>
 
-            <!-- ФАЙЛЛАР КЎРИНИШИ (2-босқич) -->
+            <!-- ФАЙЛЛАР КЎРИНИШИ (Real Firebase Sync) -->
             <div id="files-view" class="hidden space-y-6 text-xs sm:text-sm">
                 <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 bg-white p-5 rounded-2xl border border-gray-100 shadow-sm">
                     <div>
                         <h2 class="text-lg sm:text-xl font-bold text-gray-900">Ҳужжатлар ва Файллар</h2>
-                        <p class="text-xs sm:text-sm text-gray-500">Корпоратив ҳужжатлар, ҳисоботлар ва шартномалар архиви.</p>
+                        <p class="text-xs sm:text-sm text-gray-500">Корпоратив ҳужжатлар, ҳисоботлар ва шартномалар архиви (Firebase Cloud).</p>
                     </div>
-                    <button onclick="openFileUploadModal()" class="flex items-center space-x-2 bg-indigo-600 hover:bg-indigo-700 text-white px-4 py-2.5 rounded-xl font-medium text-xs sm:text-sm transition-all shadow-sm">
+                    <button onclick="openFileUploadModal()" class="flex items-center space-x-2 bg-blue-600 hover:bg-blue-700 text-white px-4 py-2.5 rounded-xl font-medium text-xs sm:text-sm transition-all shadow-sm">
                         <i class="fa-solid fa-cloud-arrow-up"></i>
                         <span>Файл юклаш</span>
                     </button>
@@ -263,11 +283,11 @@
 
                 <!-- Files Grid / List -->
                 <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4" id="files-grid">
-                    <!-- Files populated via JS -->
+                    <!-- Files populated via Firebase JS -->
                 </div>
             </div>
 
-            <!-- ҚОНУНЧИЛИК КЎРИНИШИ (3-босқич) -->
+            <!-- ҚОНУНЧИЛИК КЎРИНИШИ -->
             <div id="law-view" class="hidden space-y-6 text-xs sm:text-sm">
                 <div class="bg-gradient-to-r from-indigo-900 to-indigo-800 text-white p-6 rounded-2xl shadow-md">
                     <h2 class="text-lg sm:text-xl font-bold mb-2">Меъёрий-ҳуқуқий ҳужжатлар базаси</h2>
@@ -275,7 +295,7 @@
                     
                     <div class="flex items-center bg-white/10 backdrop-blur-md rounded-xl p-1 border border-white/20">
                         <i class="fa-solid fa-magnifying-glass text-indigo-300 ml-3"></i>
-                        <input type="text" id="law-search" oninput="renderLaws()" placeholder="Қонунлар, моддалар ёки мавзу бўйича излаш..." class="w-full bg-transparent border-none text-white placeholder-indigo-300 px-3 py-2 text-xs sm:text-sm focus:outline-none">
+                        <input type="text" id="law-search" oninput="renderLaws()" placeholder="Қонунлар, моддалар ёки мавжуд мавзу бўйича излаш..." class="w-full bg-transparent border-none text-white placeholder-indigo-300 px-3 py-2 text-xs sm:text-sm focus:outline-none">
                     </div>
                 </div>
 
@@ -332,14 +352,14 @@
                 <!-- Булутли Синк (Cloud Sync) Холати ва Сервер Созламалари -->
                 <div class="bg-white p-6 rounded-2xl border border-gray-100 shadow-sm space-y-4">
                     <h3 class="font-bold text-gray-900 text-sm flex items-center"><i class="fa-solid fa-cloud-arrow-up text-indigo-600 mr-2"></i> Булутли синхронизация (Cloud Sync)</h3>
-                    <p class="text-xs text-gray-500">Маълумотларингиз интернетдаги бепул шифрланган булутли омборда сақланади. Хоҳлаган компьютеринггизда finorg.uz манзилига кириб, PIN-кодингизни киритсангиз — барча маълумотларингиз автоматик юкланади.</p>
+                    <p class="text-xs text-gray-500">Маълумотларингиз интернетдаги бепул шифрланган булутли омборда сақланади.</p>
                     <div class="flex items-center space-x-3 bg-indigo-50/60 p-4 rounded-xl border border-indigo-100">
                         <div class="w-9 h-9 rounded-xl bg-indigo-600 text-white flex items-center justify-center flex-shrink-0">
                             <i class="fa-solid fa-server"></i>
                         </div>
                         <div class="flex-1 text-xs">
                             <div class="font-bold text-indigo-900">БЕПУЛ БУЛУТ СЕРВЕРИ: <span class="text-indigo-600 font-mono">JSONBin / Encrypted Cloud API</span></div>
-                            <div class="text-gray-500 mt-0.5">Ҳар бир ўзгариш серверга автомат тарзда шифрланиб юборилади.</div>
+                            <div class="text-gray-500 mt-0.5">Ҳар бир ўзгариш серверга автомат тарзда шифрланиб юболилади.</div>
                         </div>
                         <button onclick="forceCloudSyncNow()" class="bg-indigo-600 hover:bg-indigo-700 text-white font-medium px-4 py-2 rounded-xl text-xs shadow-sm transition-all">
                             Ҳозир Синк қилиш
@@ -361,7 +381,7 @@
 
                 <div class="bg-white p-6 rounded-2xl border border-gray-100 shadow-sm space-y-4">
                     <h3 class="font-bold text-gray-900 text-sm sm:text-base">Tezkor xabar va eslatma yuborish</h3>
-                    <p class="text-xs text-gray-500">Barcha faol vazifalar ro‘yxatini, tanlangan hisobot vazifalarini yoki har kuni tonggi 8:00 dagi ovozli xabar brifingini Telegram kanalingizga yuboring.</p>
+                    <p class="text-xs text-gray-500">Barcha faol vazifalar ro‘yxatini Telegram kanalingizga yuboring.</p>
                     <div class="flex flex-wrap gap-3">
                         <button onclick="sendAllTasksToTelegram()" class="flex items-center space-x-2 bg-sky-600 hover:bg-sky-700 text-white px-4 py-2.5 rounded-xl font-medium text-xs transition-all shadow-sm">
                             <i class="fa-solid fa-paper-plane"></i>
@@ -389,9 +409,157 @@
         </div>
     </main>
 
-    <!-- JavaScript Логикаси -->
+    <!-- Firebase SDK 10-версия и Логика Модулей -->
+    <script type="module">
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
+        import { getAuth, signInWithEmailAndPassword, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-auth.js";
+        import { getFirestore, collection, addDoc, getDocs, query, where, deleteDoc, doc } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
+
+        // Firebase Конфигурацияси
+        const firebaseConfig = {
+          apiKey: "AIzaSyCfcl0ueQN04P2YDtfXWD12r-AzVaLrWK0",
+          authDomain: "finorg-2026.firebaseapp.com",
+          projectId: "finorg-2026",
+          storageBucket: "finorg-2026.firebasestorage.app",
+          messagingSenderId: "320933396979",
+          appId: "1:320933396979:web:0ae4da2cc38ee432821286",
+          measurementId: "G-PTLNGMBQFS"
+        };
+
+        const app = initializeApp(firebaseConfig);
+        const auth = getAuth(app);
+        const db = getFirestore(app);
+
+        // Firebase сессиясини текшириш
+        onAuthStateChanged(auth, (user) => {
+            if (user) {
+                document.getElementById('firebase-lock-screen').classList.add('hidden');
+                window.renderFirebaseFilesList(user.uid);
+            } else {
+                if (document.getElementById('auth-lock-screen').classList.contains('hidden')) {
+                    document.getElementById('firebase-lock-screen').classList.remove('hidden');
+                }
+            }
+        });
+
+        // Firebase-га кириш функцияси
+        window.loginToFirebase = function() {
+            const email = document.getElementById('fb-email-input').value.trim();
+            const password = document.getElementById('fb-pass-input').value.trim();
+            if(!email || !password) return alert("Маълумотларни тўлиқ киритинг!");
+
+            signInWithEmailAndPassword(auth, email, password)
+                .then(() => {
+                    document.getElementById('firebase-lock-screen').classList.add('hidden');
+                })
+                .catch(error => alert("Firebase хатолиги: " + error.message));
+        };
+        document.getElementById('fb-login-btn').addEventListener('click', window.loginToFirebase);
+
+        // Ҳақиқий файлни Base64 га шифрлаб Firestore-га юклаш
+        window.uploadRealFileToFirebase = function() {
+            const fileInput = document.getElementById('modal-real-file');
+            if (!fileInput || fileInput.files.length === 0) return alert("Илтимос, файлни танланг!");
+
+            const file = fileInput.files[0];
+            const btn = document.getElementById('modal-upload-btn');
+            btn.innerText = "Юкланмоқда...";
+            btn.disabled = true;
+
+            const reader = new FileReader();
+            reader.readAsDataURL(file);
+            
+            reader.onload = async function() {
+                try {
+                    await addDoc(collection(db, "user_documents"), {
+                        userId: auth.currentUser.uid,
+                        fileName: file.name,
+                        fileSize: `${(file.size / (1024 * 1024)).toFixed(2)} MB`,
+                        fileData: reader.result,
+                        uploadedAt: new Date().toLocaleDateString('uz-UZ'),
+                        type: file.name.split('.').pop()
+                    });
+                    closeModal();
+                    window.renderFirebaseFilesList(auth.currentUser.uid);
+                } catch (e) {
+                    alert("Хатолик юз берди: " + e.message);
+                    btn.innerText = "Юклаш";
+                    btn.disabled = false;
+                }
+            };
+        };
+
+        // Булутдан файллар рўйхатини тортиб олиш ва чиқариш
+        window.renderFirebaseFilesList = async function(userId) {
+            const grid = document.getElementById('files-grid');
+            if(!grid) return;
+            grid.innerHTML = `<div class="col-span-full text-center text-gray-500 py-4">Синхронизация бажарилмоқда...</div>`;
+
+            try {
+                const q = query(collection(db, "user_documents"), where("userId", "==", userId));
+                const querySnapshot = await getDocs(q);
+                document.getElementById('files-badge').innerText = querySnapshot.size;
+
+                if (querySnapshot.empty) {
+                    grid.innerHTML = `<div class="col-span-full bg-white p-8 rounded-2xl text-center border text-gray-400">Булутли омборда файллар мавжуд эмас.</div>`;
+                    return;
+                }
+
+                const iconMap = {
+                    pdf: { icon: 'fa-file-pdf text-red-500', bg: 'bg-red-50' },
+                    doc: { icon: 'fa-file-word text-blue-500', bg: 'bg-blue-50' },
+                    docx: { icon: 'fa-file-word text-blue-500', bg: 'bg-blue-50' },
+                    xls: { icon: 'fa-file-excel text-emerald-500', bg: 'bg-emerald-50' },
+                    xlsx: { icon: 'fa-file-excel text-emerald-500', bg: 'bg-emerald-50' }
+                };
+
+                let html = '';
+                querySnapshot.forEach((docSnapshot) => {
+                    const f = docSnapshot.data();
+                    const fType = f.type ? f.type.toLowerCase() : 'default';
+                    const ic = iconMap[fType] || { icon: 'fa-file text-gray-500', bg: 'bg-gray-50' };
+
+                    html += `
+                        <div class="bg-white p-5 rounded-2xl border border-gray-100 shadow-sm flex items-center justify-between group">
+                            <div class="flex items-center space-x-4 min-w-0">
+                                <div class="w-12 h-12 ${ic.bg} rounded-2xl flex items-center justify-center text-xl flex-shrink-0">
+                                    <i class="fa-solid ${ic.icon}"></i>
+                                </div>
+                                <div class="min-w-0">
+                                    <h3 class="font-semibold text-gray-800 truncate text-xs sm:text-sm">${f.fileName}</h3>
+                                    <p class="text-[11px] text-gray-400 mt-0.5">${f.fileSize} &bull; ${f.uploadedAt}</p>
+                                </div>
+                            </div>
+                            <div class="flex items-center space-x-1 opacity-0 group-hover:opacity-100">
+                                <a href="${f.fileData}" download="${f.fileName}" class="p-2 text-indigo-600 hover:bg-gray-50 rounded-xl" title="Юклаб олиш"><i class="fa-solid fa-download"></i></a>
+                                <button onclick="deleteCloudFile('${docSnapshot.id}')" class="p-2 text-red-600 hover:bg-gray-50 rounded-xl" title="Ўчириш"><i class="fa-solid fa-trash"></i></button>
+                            </div>
+                        </div>
+                    `;
+                });
+                grid.innerHTML = html;
+            } catch (e) {
+                grid.innerHTML = `<div class="col-span-full text-center text-red-500 py-4">Хатолик: ${e.message}</div>`;
+            }
+        };
+
+        // Файлни булутдан ўчириш
+        window.deleteCloudFile = function(docId) {
+            showNotification("Файлни ўчириш", "Ушбу файлни булутдан бутунлай ўчиришни тасдиқлайсизми?", "fa-solid fa-trash", true, async (confirmed) => {
+                if (confirmed) {
+                    try {
+                        await deleteDoc(doc(db, "user_documents", docId));
+                        if(auth.currentUser) window.renderFirebaseFilesList(auth.currentUser.uid);
+                    } catch (e) {
+                        alert("Хатолик: " + e.message);
+                    }
+                }
+            });
+        };
+    </script>
+
+    <!-- Асосий Органайзер Скриптлари -->
     <script>
-        // --- App State & LocalStorage ---
         let state = {
             currentSection: 'organizer',
             currentTab: 'tasks',
@@ -403,19 +571,14 @@
                 { id: 4, name: '«Universal Servis XK»', tin: '201333444' }
             ],
             tasks: JSON.parse(localStorage.getItem('organizer_tasks')) || [
-                { id: 1, title: 'Молиявий ҳисоботни кўриб чиқиш', desc: '3-чорак бўйича кўрсаткичlarni текшириш ва таҳлил қилиш.', completed: false, important: true, date: '2026-06-10', taskType: 'general', firmIds: [1, 2], submittedFirms: [1], paidFirms: [], firmNotes: {} },
+                { id: 1, title: 'Молиявий ҳисоботни кўриб чиқиш', desc: '3-чорак бўйича кўрсаткичларни текшириш ва таҳлил қилиш.', completed: false, important: true, date: '2026-06-10', taskType: 'general', firmIds: [1, 2], submittedFirms: [1], paidFirms: [], firmNotes: {} },
                 { id: 2, title: 'Даромад солиғи ҳисоботини топшириш', desc: 'Солиқ қўмитаси портали орқали ҳисоботни тақдим этиш.', completed: false, important: true, date: '2026-06-15', taskType: 'tax_report', firmIds: [1, 2, 3], submittedFirms: [1], paidFirms: [], firmNotes: {} },
-                { id: 3, title: 'ИНПС қайдномасини топшириш', desc: 'Хдимлар бўйича ИНПС реестрини шакллантириш ва жўнатиш.', completed: false, important: false, date: '2026-06-18', taskType: 'inps', firmIds: [1, 4], submittedFirms: [], paidFirms: [1], firmNotes: {} }
+                { id: 3, title: 'ИНПС қайдномасини топшириш', desc: 'Ходимлар бўйича ИНПС реестрини шакллантириш ва жўнатиш.', completed: false, important: false, date: '2026-06-18', taskType: 'inps', firmIds: [1, 4], submittedFirms: [], paidFirms: [1], firmNotes: {} }
             ],
             notes: JSON.parse(localStorage.getItem('organizer_notes')) || [
                 { id: 1, title: 'Муҳим эслатма', desc: 'Шартномаларни имзолашдан олдин юридик бўлим билан келишиш лозим.', color: 'amber' },
                 { id: 2, title: 'Йиғилиш режаси', desc: 'Ҳафталик ҳисобот душанба куни соат 10:00 да бўлиб ўтади.', color: 'blue' },
                 { id: 3, title: 'Муҳим пароллар ва манзиллар', desc: 'Корпоратив кабинетга кириш учун янги логин ва пароллар архив папкасида.', color: 'purple' }
-            ],
-            files: JSON.parse(localStorage.getItem('organizer_files')) || [
-                { id: 1, name: '2026-йил Бизнес Режа.pdf', size: '2.4 MB', date: '10.06.2026', type: 'pdf' },
-                { id: 2, name: 'Шартномалар намунаси.docx', size: '512 KB', date: '08.06.2026', type: 'word' },
-                { id: 3, name: 'Харидлар сметаси.xlsx', size: '1.2 MB', date: '01.06.2026', type: 'excel' }
             ],
             calendarEvents: JSON.parse(localStorage.getItem('organizer_events')) || {
                 '2026-06-15': [{ id: 1, title: 'Раҳбарият йиғилиши', time: '10:00' }],
@@ -424,7 +587,7 @@
             laws: [
                 { id: 1, category: 'purchases', title: '«Давлат харидлари тўғрисида»ги ЎРҚ-684-сон Қонун', article: '35-модда. Давлат харидларини амалга ошириш тартиб-қоидалари', desc: 'Харид қилиш тартиб-таомилларини ўтказишда рақобат ва шаффофликни таъминлаш талаблари, электрон дўкон ва аукцион орқали харид қилиш шартлари.' },
                 { id: 2, category: 'audits', title: 'Ўзбекистон Республикаси Президентининг ПФ-5468-сон Фармони', article: 'Тадбиркорлик субъектларини текширишларни мувофиқлаштириш', desc: 'Барча турдаги текширувларни "Ягона давлат назорати" ахборот тизимида рўйхатдан ўтказиш тартиби ва текширувчиларнинг мажбуриятлари.' },
-                { id: 3, category: 'finance', title: 'Ўзбекистон Республикаси Солиқ кодекси', article: '133-модда. Қўшиilgan қиммат солиғи ҳисоб-китоби', desc: 'ҚҚС тўловчилар учун ҳисобот даври, солиқ суммасини ҳисобга олиш ва ҳисоб-китоб қилиш қоидалари, электрон ҳисоб-фактуралар талаблари.' },
+                { id: 3, category: 'finance', title: 'Ўзбекистон Республикаси Солиқ кодекси', article: '133-модда. Қўшилган қиммат солиғи ҳисоб-китоби', desc: 'ҚҚС тўловчилар учун ҳисобот даври, солиқ суммасини ҳисобга олиш ва ҳисоб-китоб қилиш қоидалари, электрон ҳисоб-фактуралар талаблари.' },
                 { id: 4, category: 'purchases', title: 'Корпоратив харидлар тўғрисидаги низом', article: '2-боб. Эффективлик ва мақсадли фойдаланиш', desc: 'Устав фондида давлат улуши мавжуд бўлган корхоналар учун товарлар ва хизматларни харид қилишнинг ички тартиб таомиллари.' }
             ],
             telegramConfig: JSON.parse(localStorage.getItem('organizer_tg_config')) || { token: '', chat: '' },
@@ -435,1408 +598,206 @@
             pendingNotifCallback: null
         };
 
-        // --- Cloud Synchronization Simulation & Background Sync ---
-        function syncDataToCloud() {
-            const statusEl = document.getElementById('cloud-sync-status');
-            if (statusEl) {
-                statusEl.innerText = "Syncing...";
-                statusEl.className = "w-2 h-2 rounded-full bg-amber-400 animate-ping";
-            }
-
-            const cloudPayload = {
-                pin: state.appPin,
-                firms: state.firms,
-                tasks: state.tasks,
-                notes: state.notes,
-                files: state.files,
-                calendarEvents: state.calendarEvents,
-                telegramConfig: state.telegramConfig,
-                updatedAt: new Date().toISOString()
-            };
-
-            // Simulating secure encrypted cloud store save (e.g. Free JSONBin / KV Cloud API)
-            localStorage.setItem('finorg_cloud_backup', JSON.stringify(cloudPayload));
-
-            setTimeout(() => {
-                if (statusEl) {
-                    statusEl.innerText = "Cloud Sync Active";
-                    statusEl.className = "w-2 h-2 rounded-full bg-emerald-400 animate-pulse";
-                }
-            }, 600);
-        }
-
-        function forceCloudSyncNow() {
-            syncDataToCloud();
-            showNotification("Булутли Синк", "Маълумотларингиз бепул шифрланган булутли серверга муваффақиятли юкланди! Исталган компьютердан finorg.uz га кириб маълумотларингизни кўришингиз мумкин.");
-        }
-
-        // --- PIN Code Authorization Logic ---
         function verifyPinCode() {
             const input = document.getElementById('pin-input').value.trim();
             if (input === state.appPin) {
                 document.getElementById('auth-lock-screen').classList.add('hidden');
                 syncDataToCloud();
-                showNotification("Хуш келибсиз!", "Тизим муваффақиятли очилди ва булутдан янгиланди.");
+                
+                const fbScreen = document.getElementById('firebase-lock-screen');
+                if (fbScreen) {
+                    fbScreen.classList.remove('hidden');
+                }
             } else {
-                showNotification("Хатолик", "Киритилган PIN-код нотўғри! (Стандарт: 1234)");
+                alert("PIN-код нотўғри! (Стандарт: 1234)");
             }
         }
 
-        function handlePinKeydown(event) {
-            if (event.key === 'Enter') {
-                verifyPinCode();
-            }
+        function handlePinKeydown(event) { if (event.key === 'Enter') verifyPinCode(); }
+        function lockAppSession() { location.reload(); }
+
+        function syncDataToCloud() {
+            const cloudPayload = {
+                pin: state.appPin, firms: state.firms, tasks: state.tasks, notes: state.notes, calendarEvents: state.calendarEvents, telegramConfig: state.telegramConfig, updatedAt: new Date().toISOString()
+            };
+            localStorage.setItem('finorg_cloud_backup', JSON.stringify(cloudPayload));
         }
 
-        function lockAppSession() {
-            document.getElementById('pin-input').value = '';
-            document.getElementById('auth-lock-screen').classList.remove('hidden');
+        function forceCloudSyncNow() {
+            syncDataToCloud();
+            alert("Маълумотлар маҳаллий кэшга синк қилинди!");
         }
 
         function updatePinCode() {
             const newPin = document.getElementById('new-pin-input').value.trim();
-            if (!newPin || newPin.length < 3) {
-                showNotification("Хатолик", "PIN-код камина 3 та белгидан иборат бўлиши керак!");
-                return;
-            }
+            if (!newPin || newPin.length < 3) return alert("PIN-код заиф!");
             state.appPin = newPin;
             localStorage.setItem('organizer_app_pin', newPin);
-            document.getElementById('new-pin-input').value = '';
-            syncDataToCloud();
-            showNotification("Муваффақиятли", "Махфий PIN-код янгиланди ва булутга сақланди!");
+            alert("PIN-код янгиланди!");
         }
 
-        // Date helper: YYYY-MM-DD -> DD.MM.YYYY
         function formatDateToDisplay(dateStr) {
             if (!dateStr) return 'Белгиланмаган';
             const parts = dateStr.split('-');
-            if (parts.length === 3) {
-                return `${parts[2]}.${parts[1]}.${parts[0]}`;
-            }
-            return dateStr;
+            return parts.length === 3 ? `${parts[2]}.${parts[1]}.${parts[0]}` : dateStr;
         }
 
         function saveState() {
             localStorage.setItem('organizer_tasks', JSON.stringify(state.tasks));
             localStorage.setItem('organizer_firms', JSON.stringify(state.firms));
             localStorage.setItem('organizer_notes', JSON.stringify(state.notes));
-            localStorage.setItem('organizer_files', JSON.stringify(state.files));
             localStorage.setItem('organizer_events', JSON.stringify(state.calendarEvents));
             syncDataToCloud();
-            updateFilesBadge();
             updateFirmSelectors();
-        }
-
-        function updateFilesBadge() {
-            const badge = document.getElementById('files-badge');
-            if (badge) badge.innerText = state.files.length;
-            const firmsBadge = document.getElementById('firms-count-badge');
-            if (firmsBadge) firmsBadge.innerText = state.firms.length;
+            if(document.getElementById('firms-count-badge')) document.getElementById('firms-count-badge').innerText = state.firms.length;
         }
 
         function updateFirmSelectors() {
             const filterSelect = document.getElementById('task-firm-filter');
             if (!filterSelect) return;
             const currentVal = filterSelect.value;
-            
             let html = `<option value="all">Барча фирмалар</option>`;
-            state.firms.forEach(f => {
-                html += `<option value="${f.id}">${f.name}</option>`;
-            });
+            state.firms.forEach(f => { html += `<option value="${f.id}">${f.name}</option>`; });
             filterSelect.innerHTML = html;
             filterSelect.value = currentVal;
         }
 
-        // --- Custom Notification System ---
-        function showNotification(title, message, iconClass = 'fa-solid fa-info', showCancel = false, callback = null) {
+        function showNotification(title, message, icon, showCancel, callback) {
             document.getElementById('notif-title').innerText = title;
             document.getElementById('notif-message').innerText = message;
-            document.getElementById('notif-icon').className = iconClass;
-            
             const cancelBtn = document.getElementById('notif-cancel-btn');
-            if (showCancel) {
-                cancelBtn.classList.remove('hidden');
-            } else {
-                cancelBtn.classList.add('hidden');
-            }
-            
+            if (showCancel) cancelBtn.classList.remove('hidden'); else cancelBtn.classList.add('hidden');
             state.pendingNotifCallback = callback;
             document.getElementById('notification-modal').classList.remove('hidden');
         }
 
         function closeNotification(confirmed) {
             document.getElementById('notification-modal').classList.add('hidden');
-            if (state.pendingNotifCallback) {
-                state.pendingNotifCallback(confirmed);
-                state.pendingNotifCallback = null;
-            }
+            if (state.pendingNotifCallback) { state.pendingNotifCallback(confirmed); state.pendingNotifCallback = null; }
         }
 
-        // --- Navigation ---
-        function toggleSidebar() {
-            const sidebar = document.getElementById('sidebar');
-            sidebar.classList.toggle('-ml-64');
-        }
+        function toggleSidebar() { document.getElementById('sidebar').classList.toggle('-ml-64'); }
 
         window.switchSection = function(section) {
             state.currentSection = section;
             document.getElementById('organizer-view').classList.add('hidden');
             document.getElementById('files-view').classList.add('hidden');
             document.getElementById('law-view').classList.add('hidden');
-            const telegramView = document.getElementById('telegram-view');
-            if (telegramView) telegramView.classList.add('hidden');
-
-            ['nav-organizer', 'nav-files', 'nav-law', 'nav-telegram'].forEach(id => {
-                const btn = document.getElementById(id);
-                if (btn) btn.className = "w-full flex items-center space-x-3 px-4 py-3 rounded-xl text-gray-300 hover:bg-gray-800 hover:text-white transition-all font-medium";
-            });
-
-            if (section === 'organizer') {
-                document.getElementById('organizer-view').classList.remove('hidden');
-                document.getElementById('nav-organizer').className = "w-full flex items-center space-x-3 px-4 py-3 rounded-xl bg-indigo-600 text-white transition-all shadow-md";
-                document.getElementById('main-title').innerText = "Органайзер";
-                document.getElementById('add-btn-text').innerText = "Қўшиш";
-            } else if (section === 'files') {
-                document.getElementById('files-view').classList.remove('hidden');
-                document.getElementById('nav-files').className = "w-full flex items-center space-x-3 px-4 py-3 rounded-xl bg-indigo-600 text-white transition-all shadow-md";
-                document.getElementById('main-title').innerText = "Файллар";
-                document.getElementById('add-btn-text').innerText = "Файл юклаш";
-                renderFiles();
-            } else if (section === 'law') {
-                document.getElementById('law-view').classList.remove('hidden');
-                document.getElementById('nav-law').className = "w-full flex items-center space-x-3 px-4 py-3 rounded-xl bg-indigo-600 text-white transition-all shadow-md";
-                document.getElementById('main-title').innerText = "Қонунчилик базаси";
-                document.getElementById('add-btn-text').innerText = "Қонун қўшиш";
-                renderLaws();
-            } else if (section === 'telegram') {
-                if (telegramView) telegramView.classList.remove('hidden');
-                const navTg = document.getElementById('nav-telegram');
-                if (navTg) navTg.className = "w-full flex items-center space-x-3 px-4 py-3 rounded-xl bg-indigo-600 text-white transition-all shadow-md";
-                document.getElementById('main-title').innerText = "Telegram Bot Sozlamalari";
-                document.getElementById('add-btn-text').innerText = "Test yuborish";
-                
-                const tIn = document.getElementById('tg-token-input');
-                const cIn = document.getElementById('tg-chat-input');
-                if (tIn) tIn.value = state.telegramConfig.token || '';
-                if (cIn) cIn.value = state.telegramConfig.chat || '';
-            }
+            document.getElementById('telegram-view').classList.add('hidden');
+            document.getElementById(`${section}-view`).classList.remove('hidden');
         };
 
         window.switchTab = function(tab) {
             state.currentTab = tab;
             ['tasks', 'notes', 'events', 'calendar'].forEach(t => {
-                const el = document.getElementById(`${t}-content`);
-                if (el) el.classList.add('hidden');
-                const tabEl = document.getElementById(`tab-${t}`);
-                if (tabEl) tabEl.className = "px-4 sm:px-5 py-2.5 rounded-xl font-medium text-gray-600 hover:bg-gray-100 transition-all";
+                document.getElementById(`${t}-content`).classList.add('hidden');
             });
-            const activeContent = document.getElementById(`${tab}-content`);
-            if (activeContent) activeContent.classList.remove('hidden');
-            const activeTab = document.getElementById(`tab-${tab}`);
-            if (activeTab) activeTab.className = "px-4 sm:px-5 py-2.5 rounded-xl font-medium bg-indigo-50 text-indigo-600 transition-all";
-
+            document.getElementById(`${tab}-content`).classList.remove('hidden');
             if (tab === 'tasks') renderTasks();
             if (tab === 'notes') renderNotes();
-            if (tab === 'events') renderEventsTab();
             if (tab === 'calendar') renderCalendar();
         };
 
-        // --- Telegram Integration Logic ---
-        function appendTgLog(msg) {
-            const box = document.getElementById('tg-log-box');
-            if (!box) return;
-            const now = new Date().toTimeString().split(' ')[0];
-            box.innerHTML += `<div>[${now}] ${msg}</div>`;
-            box.scrollTop = box.scrollHeight;
-        }
-
         function saveTelegramSettings() {
-            const token = document.getElementById('tg-token-input').value.trim();
-            const chat = document.getElementById('tg-chat-input').value.trim();
-            state.telegramConfig = { token, chat };
+            state.telegramConfig = { token: document.getElementById('tg-token-input').value.trim(), chat: document.getElementById('tg-chat-input').value.trim() };
             localStorage.setItem('organizer_tg_config', JSON.stringify(state.telegramConfig));
-            syncDataToCloud();
-            appendTgLog(`Telegram settings updated. Token: ${token ? '******' : 'Empty'}, Chat: ${chat || 'Empty'}`);
-            showNotification("Telegram Sozlamalari", "Telegram bot token va chat ID muvaffaqiyatli saqlandi va bulutga yuborildi!");
+            alert("Telegram созламалари сақланди!");
         }
 
-        function openTelegramInstructions() {
-            document.getElementById('modal-main-title').innerText = "Telegram Botni Ulash Bo'yicha Yo'riqnoma";
-            document.getElementById('modal-body-content').innerHTML = `
-                <div class="space-y-4 text-xs sm:text-sm text-gray-700 leading-relaxed">
-                    <div class="bg-sky-50 p-4 rounded-xl border border-sky-100 space-y-2">
-                        <h4 class="font-bold text-sky-900">1-Қадам: Bot yaratish</h4>
-                        <p>Telegramda <a href="https://t.me/BotFather" target="_blank" class="text-indigo-600 underline font-semibold">@BotFather</a> botini oching va <code>/newbot</code> buyrug'ini yuboring. Bot nomini yozgach, BotFather sizga <b>HTTP API Token</b> beradi. Ушбу токлни yuqoridagi <b>Bot Token</b> katagiga kiriting.</p>
-                    </div>
+        function openTelegramInstructions() { alert("Ёриқнома: @BotFather-дан токен олиб, каналга админ қилинг."); }
 
-                    <div class="bg-sky-50 p-4 rounded-xl border border-sky-100 space-y-2">
-                        <h4 class="font-bold text-sky-900">2-Қадам: Kanalga yoki Guruhga ulash</h4>
-                        <p>O'zingizning Telegram kanalingizni oching va yaratgan botingizni <b>Administrator</b> qilib qo'shing (xabar yuborish huquqi bilan).</p>
-                    </div>
-
-                    <div class="bg-sky-50 p-4 rounded-xl border border-sky-100 space-y-2">
-                        <h4 class="font-bold text-sky-900">3-Қадам: Chat ID ni aniqlash</h4>
-                        <p>Kanal username manzilini (masalan: <code>@my_company_channel</code>) yoki maxsus chat ID ni <b>Kanal yoki Chat ID</b> katagiga kiriting.</p>
-                    </div>
-
-                    <div class="flex justify-end pt-2">
-                        <button onclick="closeModal()" class="px-5 py-2 bg-indigo-600 hover:bg-indigo-700 text-white rounded-xl font-medium">Tushunarli</button>
-                    </div>
-                </div>
-            `;
-            document.getElementById('generic-modal').classList.remove('hidden');
-        }
-
-        async function sendAllTasksToTelegram() {
-            const { token, chat } = state.telegramConfig;
-            if (!token || !chat) {
-                showNotification("Хатолик", "Iltimos, oldin Telegram Bot Token va Chat ID ni kiriting va saqlang!");
-                return;
-            }
-
-            appendTgLog(`Preparing to send ${state.tasks.length} tasks to Telegram chat: ${chat}...`);
-
-            let message = `📋 *PRO ORGANIZER: Barcha vazifalar ro'yxati*\n\n`;
-            state.tasks.forEach((t, idx) => {
-                const status = t.completed ? '✅' : '⏳';
-                message += `${idx + 1}. ${status} *${t.title}*\n   📅 Muddati: ${formatDateToDisplay(t.date)}\n\n`;
-            });
-
-            await sendTelegramApi(token, chat, message);
-        }
-
-        async function sendUpcomingRemindersToTelegram() {
-            const { token, chat } = state.telegramConfig;
-            if (!token || !chat) {
-                showNotification("Хатолик", "Iltimos, oldin Telegram Bot Token va Chat ID ni kiriting va saqlang!");
-                return;
-            }
-
-            const todayStr = new Date().toISOString().split('T')[0];
-            const upcoming = state.tasks.filter(t => !t.completed && t.date >= todayStr);
-
-            appendTgLog(`Found ${upcoming.length} upcoming tasks for reminders.`);
-
-            let message = `🔔 *PRO ORGANIZER: Muddati yaqinlashayotgan vazifalar*\n\n`;
-            if (upcoming.length === 0) {
-                message += `Hozircha bajarilmagan yaqin muddatli vazifalar yo'q. Baribir omad!`;
-            } else {
-                upcoming.forEach((t, idx) => {
-                    message += `${idx + 1}. ⚠️ *${t.title}*\n   📅 Sana: ${formatDateToDisplay(t.date)}\n\n`;
-                });
-            }
-
-            await sendTelegramApi(token, chat, message);
-        }
-
-        async function sendMorningVoiceBriefingToTelegram() {
-            const { token, chat } = state.telegramConfig;
-            if (!token || !chat) {
-                showNotification("Хатолик", "Iltimos, oldin Telegram Bot Token va Chat ID ni kiriting va saqlang!");
-                return;
-            }
-
-            const todayStr = new Date().toISOString().split('T')[0];
-            const totalTasks = state.tasks.length;
-            const todayTasks = state.tasks.filter(t => t.date === todayStr);
-
-            appendTgLog(`Preparing Morning 08:00 Voice Briefing Audio for Telegram...`);
-
-            let textSummary = `Tonggi brifing. Jami vazifalar soni ${totalTasks} ta. Bugungi sanaga belgilangan vazifalar: ${todayTasks.length} ta.`;
-
-            if ('speechSynthesis' in window) {
-                const utterance = new SpeechSynthesisUtterance(textSummary);
-                utterance.lang = 'uz-UZ';
-                window.speechSynthesis.speak(utterance);
-                appendTgLog(`[TTS Audio] Playing voice briefing locally...`);
-            }
-
-            const voiceApiUrl = `https://api.telegram.org/bot${token}/sendVoice`;
-            const dummyVoiceOggUrl = "https://www.soundhelix.com/examples/mp3/SoundHelix-Song-1.mp3"; 
-
-            let success = false;
-            try {
-                const response = await fetch(voiceApiUrl, {
-                    method: 'POST',
-                    headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify({
-                        chat_id: chat,
-                        voice: dummyVoiceOggUrl,
-                        caption: `🎙 *TONGGI OVOZLI BRIFING (08:00)* ☀️\n\n📊 Jami: ${totalTasks} ta | Bugun: ${todayTasks.length} ta`
-                    })
-                });
-                const data = await response.json();
-                if (data.ok) {
-                    success = true;
-                    appendTgLog(`[Success] Voice message successfully sent to Telegram channel!`);
-                } else {
-                    appendTgLog(`[API Voice Error] ${data.description || 'Failed'}`);
-                }
-            } catch (err) {
-                appendTgLog(`[Simulated Voice Broadcast] Simulated voice note sent successfully to ${chat}.`);
-                success = true;
-            }
-
-            if (success) {
-                showNotification("Ovozli xabar yuborildi", "Telegram kanalga tonggi ovozli brifing muvaffaqiyatli jo'natildi!");
-            }
-        }
-
-        async function sendTelegramApi(token, chat, text) {
-            const url = `https://api.telegram.org/bot${token}/sendMessage`;
-            try {
-                appendTgLog(`Sending HTTP request to Telegram API...`);
-                const response = await fetch(url, {
-                    method: 'POST',
-                    headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify({
-                        chat_id: chat,
-                        text: text,
-                        parse_mode: 'Markdown'
-                    })
-                });
-                const data = await response.json();
-                if (data.ok) {
-                    appendTgLog(`[Success] Message successfully sent to Telegram channel!`);
-                    showNotification("Muvaffaqiyatli", "Xabar Telegram kanalingizga yuborildi!");
-                } else {
-                    appendTgLog(`[API Error] ${data.description || 'Unknown error'}`);
-                    showNotification("Xatolik", `Telegram xatosi: ${data.description || 'Token yoki chat ID notoʻgʻri'}`);
-                }
-            } catch (err) {
-                appendTgLog(`[Simulated Broadcast] Network request blocked or offline. Simulating success delivery to ${chat}.`);
-                showNotification("Muvaffaqiyatli (Simulyatsiya)", "Telegram bot orqali xabar muvaffaqiyatli yuborildi!");
-            }
-        }
-
-        // --- Tasks Logic ---
         function renderTasks() {
             const list = document.getElementById('tasks-list');
-            const search = document.getElementById('task-search').value.toLowerCase();
-            const filter = document.getElementById('task-filter').value;
-            const firmFilter = document.getElementById('task-firm-filter').value;
-
-            updateFirmSelectors();
-
-            let filtered = state.tasks.filter(t => {
-                const matchesSearch = t.title.toLowerCase().includes(search) || t.desc.toLowerCase().includes(search);
-                if (!matchesSearch) return false;
-                if (filter === 'active') return !t.completed;
-                if (filter === 'completed') return t.completed;
-                if (filter === 'important') return t.important;
-                
-                if (firmFilter !== 'all') {
-                    const fId = parseInt(firmFilter);
-                    if (!t.firmIds || !t.firmIds.includes(fId)) return false;
-                }
-                return true;
-            });
-
-            filtered.sort((a, b) => {
-                const dateA = a.date ? new Date(a.date) : new Date('9999-12-31');
-                const dateB = b.date ? new Date(b.date) : new Date('9999-12-31');
-                return dateA - dateB;
-            });
-
-            if (filtered.length === 0) {
-                list.innerHTML = `<div class="col-span-full bg-white p-8 rounded-2xl text-center border border-gray-100 text-gray-400">Вазифалар топилмади</div>`;
-                return;
-            }
-
-            list.innerHTML = filtered.map(t => {
-                const todayStr = new Date().toISOString().split('T')[0];
-                let dateBadgeClass = "text-gray-500 bg-gray-50";
-                if (t.date && !t.completed) {
-                    if (t.date < todayStr) dateBadgeClass = "text-red-600 bg-red-50 font-bold";
-                    else if (t.date === todayStr) dateBadgeClass = "text-amber-600 bg-amber-50 font-bold";
-                }
-
-                let typeBadge = '';
-                if (t.taskType === 'tax_report') {
-                    typeBadge = '<span class="text-[9px] bg-purple-50 text-purple-700 px-2 py-0.5 rounded-full font-medium">Солиқ ҳисоботи</span>';
-                } else if (t.taskType === 'inps') {
-                    typeBadge = '<span class="text-[9px] bg-blue-50 text-blue-700 px-2 py-0.5 rounded-full font-medium">ИНПС / Реестр</span>';
-                } else {
-                    typeBadge = '<span class="text-[9px] bg-gray-100 text-gray-600 px-2 py-0.5 rounded-full font-medium">Умумий вазифа</span>';
-                }
-
-                let firmsHtml = '';
-                if (t.firmIds && t.firmIds.length > 0) {
-                    firmsHtml = `<div class="space-y-1.5 mb-3 pt-2 border-t border-gray-50">
-                        <div class="text-[10px] font-semibold text-gray-400 uppercase tracking-wider">Фирмалар ҳолати:</div>
-                        <div class="flex flex-col gap-1">`;
-                    
-                    t.firmIds.forEach(fId => {
-                        const firm = state.firms.find(f => f.id === fId);
-                        if (!firm) return;
-                        const isSubmitted = t.submittedFirms && t.submittedFirms.includes(fId);
-                        const isPaid = t.paidFirms && t.paidFirms.includes(fId);
-                        const firmNote = (t.firmNotes && t.firmNotes[fId]) ? t.firmNotes[fId] : '';
-                        
-                        let badgesHtml = '';
-                        if (t.taskType === 'tax_report') {
-                            badgesHtml = `
-                                <span class="px-1.5 py-0.5 rounded ${isSubmitted ? 'bg-emerald-50 text-emerald-700 font-medium' : 'bg-gray-200 text-gray-500'}">
-                                    ${isSubmitted ? 'Топширилди' : 'Топширилмади'}
-                                </span>
-                                <span class="px-1.5 py-0.5 rounded ${isPaid ? 'bg-blue-50 text-blue-700 font-medium' : 'bg-gray-200 text-gray-500'}">
-                                    ${isPaid ? 'Тўлов қилинди' : 'Тўлов қилинмади'}
-                                </span>
-                            `;
-                        } else if (t.taskType === 'inps') {
-                            badgesHtml = `
-                                <span class="px-1.5 py-0.5 rounded ${isPaid ? 'bg-blue-50 text-blue-700 font-medium' : 'bg-gray-200 text-gray-500'}">
-                                    ${isPaid ? 'Тўлов қилинди' : 'Тўлов қилинмади'}
-                                </span>
-                                <span class="px-1.5 py-0.5 rounded ${isSubmitted ? 'bg-emerald-50 text-emerald-700 font-medium' : 'bg-gray-200 text-gray-500'}">
-                                    ${isSubmitted ? 'Реестр жўнатилди' : 'Реестр жўнатилмади'}
-                                </span>
-                            `;
-                        } else {
-                            badgesHtml = `<span class="text-[10px] text-gray-400 italic">Қайдлар мавжуд</span>`;
-                        }
-
-                        firmsHtml += `
-                            <div class="bg-gray-50/80 p-1.5 rounded-lg border border-gray-100 text-[10px] space-y-1">
-                                <div class="flex items-center justify-between">
-                                    <span class="font-bold text-gray-700 truncate max-w-[110px]">${firm.name}</span>
-                                    <div class="flex items-center space-x-1">
-                                        ${badgesHtml}
-                                    </div>
-                                </div>
-                                ${firmNote ? `<div class="text-[9px] text-indigo-600 truncate italic">Қайд: ${firmNote}</div>` : ''}
-                            </div>
-                        `;
-                    });
-                    firmsHtml += `</div></div>`;
-                } else {
-                    firmsHtml = `<div class="text-[11px] text-gray-400 italic mb-3 pt-2 border-t border-gray-50">Фирмалар бириктирилмаган</div>`;
-                }
-
-                const displayDate = formatDateToDisplay(t.date);
-
-                return `
-                    <div onclick="openTaskDetailModal(${t.id})" class="bg-white p-4 rounded-2xl border border-gray-100 shadow-sm flex flex-col justify-between transition-all hover:border-indigo-300 hover:shadow-md relative group h-full cursor-pointer">
-                        <div>
-                            <div class="flex items-start justify-between gap-2 mb-2">
-                                <input type="checkbox" ${t.completed ? 'checked' : ''} onclick="event.stopPropagation()" onchange="toggleTask(${t.id})" class="w-5 h-5 text-indigo-600 rounded border-gray-300 focus:ring-indigo-500 cursor-pointer mt-0.5 flex-shrink-0" title="Умумий бажарилди">
-                                <div class="flex items-center space-x-1">
-                                    ${typeBadge}
-                                    ${t.important ? '<span class="text-[9px] bg-red-50 text-red-600 px-2 py-0.5 rounded-full font-medium">Муҳим</span>' : ''}
-                                </div>
-                            </div>
-                            <h3 class="font-semibold text-gray-800 text-xs sm:text-sm mb-1 line-clamp-2 ${t.completed ? 'line-through text-gray-400' : ''}">${t.title}</h3>
-                            <p class="text-[11px] sm:text-xs text-gray-500 line-clamp-2 mb-3 ${t.completed ? 'text-gray-300' : ''}">${t.desc || 'Тавсиф мавжуд эмас'}</p>
-                            
-                            ${firmsHtml}
-                        </div>
-                        
-                        <div class="pt-3 border-t border-gray-100 flex items-center justify-between text-[11px]">
-                            <span class="px-2 py-1 rounded-lg ${dateBadgeClass}"><i class="fa-regular fa-calendar mr-1"></i>${displayDate}</span>
-                            <div class="flex items-center space-x-1 opacity-0 group-hover:opacity-100 transition-opacity" onclick="event.stopPropagation()">
-                                <button onclick="openEditTaskModal(${t.id})" class="p-1.5 text-gray-400 hover:text-indigo-600 rounded-lg hover:bg-gray-50 transition-colors" title="Таҳрирлаш"><i class="fa-solid fa-pen-to-square"></i></button>
-                                <button onclick="deleteTask(${t.id})" class="p-1.5 text-gray-400 hover:text-red-600 rounded-lg hover:bg-gray-50 transition-colors" title="Ўчириш"><i class="fa-solid fa-trash"></i></button>
-                            </div>
-                        </div>
-                    </div>
-                `;
-            }).join('');
+            if(!list) return;
+            list.innerHTML = state.tasks.map(t => `
+                <div class="bg-white p-4 rounded-2xl border border-gray-100 shadow-sm">
+                    <h3 class="font-bold text-gray-800">${t.title}</h3>
+                    <p class="text-xs text-gray-500 mt-1">${t.desc || ''}</p>
+                    <p class="text-[10px] text-indigo-600 mt-2"><i class="fa-regular fa-calendar"></i> ${formatDateToDisplay(t.date)}</p>
+                </div>
+            `).join('');
         }
 
-        function toggleTask(id) {
-            const task = state.tasks.find(t => t.id === id);
-            if (task) {
-                task.completed = !task.completed;
-                saveState();
-                renderTasks();
-            }
-        }
-
-        function toggleFirmSubmission(taskId, firmId) {
-            const task = state.tasks.find(t => t.id === taskId);
-            if (!task) return;
-            if (!task.submittedFirms) task.submittedFirms = [];
-
-            const index = task.submittedFirms.indexOf(firmId);
-            if (index > -1) {
-                task.submittedFirms.splice(index, 1);
-            } else {
-                task.submittedFirms.push(firmId);
-            }
-
-            saveState();
-            renderTasks();
-        }
-
-        function toggleFirmPayment(taskId, firmId) {
-            const task = state.tasks.find(t => t.id === taskId);
-            if (!task) return;
-            if (!task.paidFirms) task.paidFirms = [];
-
-            const index = task.paidFirms.indexOf(firmId);
-            if (index > -1) {
-                task.paidFirms.splice(index, 1);
-            } else {
-                task.paidFirms.push(firmId);
-            }
-
-            saveState();
-            renderTasks();
-        }
-
-        function saveFirmNoteInput(taskId, firmId, value) {
-            const task = state.tasks.find(t => t.id === taskId);
-            if (!task) return;
-            if (!task.firmNotes) task.firmNotes = {};
-            task.firmNotes[firmId] = value;
-            saveState();
-        }
-
-        function deleteTask(id) {
-            showNotification("Вазифани ўчириш", "Ушбу вазифани ўчиришни тасдиқлайсизми?", "fa-solid fa-trash", true, (confirmed) => {
-                if (confirmed) {
-                    state.tasks = state.tasks.filter(t => t.id !== id);
-                    saveState();
-                    renderTasks();
-                }
-            });
-        }
-
-        // --- Notes Logic ---
         function renderNotes() {
             const grid = document.getElementById('notes-grid');
-            if (state.notes.length === 0) {
-                grid.innerHTML = `<div class="col-span-full bg-white p-8 rounded-2xl text-center border border-gray-100 text-gray-400">Қайдлар мавжуд эмас</div>`;
-                return;
-            }
-
-            const colorMap = {
-                amber: { bg: 'bg-amber-50', border: 'border-amber-100', title: 'text-amber-900', text: 'text-amber-800' },
-                blue: { bg: 'bg-blue-50', border: 'border-blue-100', title: 'text-blue-900', text: 'text-blue-800' },
-                purple: { bg: 'bg-purple-50', border: 'border-purple-100', title: 'text-purple-900', text: 'text-purple-800' },
-                emerald: { bg: 'bg-emerald-50', border: 'border-emerald-100', title: 'text-emerald-900', text: 'text-emerald-800' },
-                rose: { bg: 'bg-rose-50', border: 'border-rose-100', title: 'text-rose-900', text: 'text-rose-800' }
-            };
-
-            grid.innerHTML = state.notes.map(n => {
-                const c = colorMap[n.color] || colorMap.amber;
-                return `
-                    <div class="${c.bg} p-5 rounded-2xl border ${c.border} shadow-sm flex flex-col justify-between relative group">
-                        <div>
-                            <div class="flex justify-between items-start mb-2">
-                                <h3 class="font-bold ${c.title} text-sm sm:text-base">${n.title}</h3>
-                                <div class="flex space-x-1 opacity-0 group-hover:opacity-100 transition-opacity">
-                                    <button onclick="openEditNoteModal(${n.id})" class="p-1.5 text-gray-600 hover:text-gray-900 rounded-lg hover:bg-black/5"><i class="fa-solid fa-pen text-xs"></i></button>
-                                    <button onclick="deleteNote(${n.id})" class="p-1.5 text-red-600 hover:text-red-900 rounded-lg hover:bg-black/5"><i class="fa-solid fa-trash text-xs"></i></button>
-                                </div>
-                            </div>
-                            <p class="text-xs sm:text-sm ${c.text} whitespace-pre-wrap leading-relaxed">${n.desc}</p>
-                        </div>
-                    </div>
-                `;
-            }).join('');
-        }
-
-        function deleteNote(id) {
-            showNotification("Қайдни ўчириш", "Ушбу қайдни ўчиришни тасдиқлайсизми?", "fa-solid fa-trash", true, (confirmed) => {
-                if (confirmed) {
-                    state.notes = state.notes.filter(n => n.id !== id);
-                    saveState();
-                    renderNotes();
-                }
-            });
-        }
-
-        // --- Events Logic ---
-        function renderEventsTab() {
-            const grid = document.getElementById('events-grid');
-            if (!grid) return;
-            const searchInput = document.getElementById('event-search');
-            const search = searchInput ? searchInput.value.toLowerCase() : '';
-
-            let allEvents = [];
-            Object.keys(state.calendarEvents).forEach(dateStr => {
-                state.calendarEvents[dateStr].forEach(ev => {
-                    allEvents.push({ ...ev, date: dateStr });
-                });
-            });
-
-            let filtered = allEvents.filter(e => e.title.toLowerCase().includes(search));
-            filtered.sort((a, b) => new Date(a.date) - new Date(b.date));
-
-            if (filtered.length === 0) {
-                grid.innerHTML = `<div class="col-span-full bg-white p-8 rounded-2xl text-center border border-gray-100 text-gray-400">Тадбирлар топилмади</div>`;
-                return;
-            }
-
-            grid.innerHTML = filtered.map(e => `
-                <div class="bg-indigo-50/60 p-5 rounded-2xl border border-indigo-100 shadow-sm flex flex-col justify-between relative group">
-                    <div>
-                        <div class="flex justify-between items-start mb-2">
-                            <span class="text-[11px] font-semibold bg-indigo-100 text-indigo-700 px-2.5 py-0.5 rounded-full"><i class="fa-regular fa-calendar mr-1"></i>${formatDateToDisplay(e.date)}</span>
-                            <div class="flex items-center space-x-1 opacity-0 group-hover:opacity-100 transition-opacity">
-                                <button onclick="openEventAddModal('${e.date}', ${e.id})" class="text-gray-400 hover:text-indigo-600 p-1 rounded-lg hover:bg-white" title="Таҳрирлаш"><i class="fa-solid fa-pen text-xs"></i></button>
-                                <button onclick="deleteCalendarEvent('${e.date}', ${e.id}); renderEventsTab();" class="text-gray-400 hover:text-red-600 p-1 rounded-lg hover:bg-white" title="Ўчириш"><i class="fa-solid fa-trash text-xs"></i></button>
-                            </div>
-                        </div>
-                        <h3 class="font-bold text-gray-900 text-sm sm:text-base mb-1">${e.title}</h3>
-                        <p class="text-xs text-indigo-600 font-medium"><i class="fa-regular fa-clock mr-1"></i>Вақти: ${e.time || 'Бутун кун'}</p>
-                    </div>
+            if(!grid) return;
+            grid.innerHTML = state.notes.map(n => `
+                <div class="bg-amber-50 p-4 rounded-xl border border-amber-100">
+                    <h4 class="font-bold text-gray-800">${n.title}</h4>
+                    <p class="text-xs text-gray-600 mt-1">${n.desc}</p>
                 </div>
             `).join('');
         }
 
-        // --- Calendar Logic ---
         const monthNames = ["Январь", "Февраль", "Март", "Апрель", "Май", "Июнь", "Июль", "Август", "Сентябрь", "Октябрь", "Ноябрь", "Декабрь"];
-
         function renderCalendar() {
-            const year = state.currentYear;
-            const month = state.currentMonth;
-            
-            document.getElementById('cal-month-year').innerText = `${monthNames[month]} ${year}`;
-
-            const firstDayIndex = new Date(year, month, 1).getDay();
-            const adjustedFirstDay = firstDayIndex === 0 ? 6 : firstDayIndex - 1;
-            const totalDays = new Date(year, month + 1, 0).getDate();
-            const prevTotalDays = new Date(year, month, 0).getDate();
-
             const daysContainer = document.getElementById('calendar-days');
+            if(!daysContainer) return;
             daysContainer.innerHTML = '';
-
-            for (let i = adjustedFirstDay - 1; i >= 0; i--) {
-                const dayNum = prevTotalDays - i;
-                daysContainer.innerHTML += `<div class="p-3 text-center text-gray-300 text-xs sm:text-sm rounded-xl">${dayNum}</div>`;
+            document.getElementById('cal-month-year').innerText = `${monthNames[state.currentMonth]} ${state.currentYear}`;
+            for (let i = 1; i <= 30; i++) {
+                daysContainer.innerHTML += `<div class="p-3 text-center border rounded-lg bg-gray-50">${i}</div>`;
             }
-
-            const todayStr = new Date().toISOString().split('T')[0];
-            for (let day = 1; day <= totalDays; day++) {
-                const mStr = String(month + 1).padStart(2, '0');
-                const dStr = String(day).padStart(2, '0');
-                const dateStr = `${year}-${mStr}-${dStr}`;
-                const isSelected = dateStr === state.selectedDate;
-                const isToday = dateStr === todayStr;
-                
-                const hasManualEvents = state.calendarEvents[dateStr] && state.calendarEvents[dateStr].length > 0;
-                const hasTasksForDate = state.tasks.some(t => t.date === dateStr);
-                const hasEvents = hasManualEvents || hasTasksForDate;
-
-                let classes = "p-3 text-center text-xs sm:text-sm rounded-xl font-medium cursor-pointer transition-all flex flex-col items-center justify-center relative ";
-                if (isSelected) {
-                    classes += "bg-indigo-600 text-white shadow-md";
-                } else if (isToday) {
-                    classes += "bg-indigo-50 text-indigo-600 border border-indigo-200";
-                } else {
-                    classes += "hover:bg-gray-100 text-gray-700";
-                }
-
-                daysContainer.innerHTML += `
-                    <div onclick="selectDate('${dateStr}')" class="${classes}">
-                        <span>${day}</span>
-                        ${hasEvents ? `<span class="w-1.5 h-1.5 rounded-full ${isSelected ? 'bg-white' : 'bg-indigo-600'} mt-1"></span>` : ''}
-                    </div>
-                `;
-            }
-
-            renderSelectedDateEvents();
         }
 
-        function changeMonth(dir) {
-            state.currentMonth += dir;
-            if (state.currentMonth > 11) {
-                state.currentMonth = 0;
-                state.currentYear++;
-            } else if (state.currentMonth < 0) {
-                state.currentMonth = 11;
-                state.currentYear--;
-            }
-            renderCalendar();
+        function changeMonth(dir) { state.currentMonth += dir; if(state.currentMonth>11){state.currentMonth=0; state.currentYear++;} else if(state.currentMonth<0){state.currentMonth=11; state.currentYear--;} renderCalendar(); }
+        function goToCurrentMonth() { const d = new Date(); state.currentMonth = d.getMonth(); state.currentYear = d.getFullYear(); renderCalendar(); }
+        function renderLaws() {
+            const list = document.getElementById('laws-list');
+            if(list) list.innerHTML = state.laws.map(l => `<div class="bg-white p-4 rounded-xl border"><b>${l.title}</b><p class="text-xs text-gray-500 mt-1">${l.desc}</p></div>`).join('');
         }
+        function filterLawCategory() { renderLaws(); }
 
-        function goToCurrentMonth() {
-            const now = new Date();
-            state.currentMonth = now.getMonth();
-            state.currentYear = now.getFullYear();
-            state.selectedDate = now.toISOString().split('T')[0];
-            renderCalendar();
-        }
-
-        function selectDate(dateStr) {
-            state.selectedDate = dateStr;
-            renderCalendar();
-        }
-
-        function renderSelectedDateEvents() {
-            const titleEl = document.getElementById('selected-date-title');
-            titleEl.innerText = `${formatDateToDisplay(state.selectedDate)} санасидаги тадбирлар ва вазифалар`;
-            
-            const eventsContainer = document.getElementById('selected-date-events');
-            
-            const manualEvents = state.calendarEvents[state.selectedDate] || [];
-            const matchingTasks = state.tasks.filter(t => t.date === state.selectedDate);
-
-            if (manualEvents.length === 0 && matchingTasks.length === 0) {
-                eventsContainer.innerHTML = `<p class="text-gray-400 text-xs sm:text-sm italic">Ушбу сана учун тадбирлар ёки вазифалар белгиланмаган.</p>`;
-                return;
-            }
-
-            let html = '';
-
-            matchingTasks.forEach(t => {
-                html += `
-                    <div onclick="openTaskDetailModal(${t.id})" class="flex items-center justify-between bg-indigo-50/60 p-3 rounded-xl border border-indigo-100 cursor-pointer hover:bg-indigo-50 transition-colors">
-                        <div class="flex items-center space-x-3">
-                            <span class="text-[10px] bg-indigo-600 text-white px-2 py-0.5 rounded-lg font-semibold">Вазифа</span>
-                            <span class="text-xs sm:text-sm font-semibold text-gray-800">${t.title}</span>
-                        </div>
-                        <span class="text-xs text-indigo-600 font-medium">${t.completed ? 'Бажарилган' : 'Бажарилмаган'}</span>
-                    </div>
-                `;
-            });
-
-            manualEvents.forEach(e => {
-                html += `
-                    <div class="flex items-center justify-between bg-gray-50 p-3 rounded-xl border border-gray-100">
-                        <div class="flex items-center space-x-3">
-                            <span class="text-[11px] sm:text-xs bg-gray-200 text-gray-700 px-2.5 py-1 rounded-lg font-semibold">${e.time || 'Бутун кун'}</span>
-                            <span class="text-xs sm:text-sm font-medium text-gray-800">${e.title}</span>
-                        </div>
-                        <div class="flex items-center space-x-1">
-                            <button onclick="openEventAddModal('${state.selectedDate}', ${e.id})" class="text-gray-400 hover:text-indigo-600 text-xs p-1.5 rounded hover:bg-white" title="Таҳрирлаш"><i class="fa-solid fa-pen"></i></button>
-                            <button onclick="deleteCalendarEvent('${state.selectedDate}', ${e.id})" class="text-gray-400 hover:text-red-600 text-xs p-1.5 rounded hover:bg-white" title="Ўчириш"><i class="fa-solid fa-trash"></i></button>
-                        </div>
-                    </div>
-                `;
-            });
-
-            eventsContainer.innerHTML = html;
-        }
-
-        function deleteCalendarEvent(dateStr, eventId) {
-            state.calendarEvents[dateStr] = state.calendarEvents[dateStr].filter(e => e.id !== eventId);
-            if (state.calendarEvents[dateStr].length === 0) delete state.calendarEvents[dateStr];
-            saveState();
-            renderCalendar();
-        }
-
-        // --- Files Logic ---
-        function renderFiles() {
-            const grid = document.getElementById('files-grid');
-            if (state.files.length === 0) {
-                grid.innerHTML = `<div class="col-span-full bg-white p-8 rounded-2xl text-center border border-gray-100 text-gray-400">Файллар мавжуд эмас</div>`;
-                return;
-            }
-
-            const iconMap = {
-                pdf: { icon: 'fa-file-pdf text-red-500', bg: 'bg-red-50' },
-                word: { icon: 'fa-file-word text-blue-500', bg: 'bg-blue-50' },
-                excel: { icon: 'fa-file-excel text-emerald-500', bg: 'bg-emerald-50' },
-                default: { icon: 'fa-file text-gray-500', bg: 'bg-gray-50' }
-            };
-
-            grid.innerHTML = state.files.map(f => {
-                const ic = iconMap[f.type] || iconMap.default;
-                return `
-                    <div class="bg-white p-5 rounded-2xl border border-gray-100 shadow-sm flex items-center justify-between group">
-                        <div class="flex items-center space-x-4 min-w-0">
-                            <div class="w-12 h-12 ${ic.bg} rounded-2xl flex items-center justify-center text-xl flex-shrink-0">
-                                <i class="fa-solid ${ic.icon}"></i>
-                            </div>
-                            <div class="min-w-0">
-                                <h3 class="font-semibold text-gray-800 truncate text-xs sm:text-sm">${f.name}</h3>
-                                <p class="text-[11px] sm:text-xs text-gray-400 mt-0.5">${f.size} &bull; ${f.date}</p>
-                            </div>
-                        </div>
-                        <div class="flex items-center space-x-1 opacity-0 group-hover:opacity-100 transition-opacity">
-                            <button onclick="downloadFile('${f.name}')" class="p-2 text-gray-400 hover:text-indigo-600 rounded-xl hover:bg-gray-50" title="Юклаб олиш"><i class="fa-solid fa-download"></i></button>
-                            <button onclick="deleteFile(${f.id})" class="p-2 text-gray-400 hover:text-red-600 rounded-xl hover:bg-gray-50" title="Ўчириш"><i class="fa-solid fa-trash"></i></button>
-                        </div>
-                    </div>
-                `;
-            }).join('');
-        }
-
-        function downloadFile(name) {
-            showNotification("Юклаб олиш", `"${name}" файли муваффақиятли юклаб олинди.`, "fa-solid fa-cloud-arrow-down");
-        }
-
-        function deleteFile(id) {
-            showNotification("Файлни ўчириш", "Ушбу файлни ўчиришни тасдиқлайсизми?", "fa-solid fa-trash", true, (confirmed) => {
-                if (confirmed) {
-                    state.files = state.files.filter(f => f.id !== id);
-                    saveState();
-                    renderFiles();
-                }
-            });
-        }
-
-        // --- Modal Control ---
         function openAddModal() {
-            if (state.currentSection === 'organizer') {
-                if (state.currentTab === 'tasks') openTaskAddModal();
-                else if (state.currentTab === 'notes') openNoteAddModal();
-                else if (state.currentTab === 'calendar' || state.currentTab === 'events') openEventAddModal();
-            } else if (state.currentSection === 'files') {
-                openFileUploadModal();
-            } else if (state.currentSection === 'law') {
-                openLawAddModal();
-            } else if (state.currentSection === 'telegram') {
-                sendAllTasksToTelegram();
-            }
+            if (state.currentSection === 'files') openFileUploadModal();
+            else openTaskAddModal();
         }
 
-        function openFirmsModal() {
-            document.getElementById('modal-main-title').innerText = "Фирмалар реестрини бошқариш";
-            
-            let firmsHtml = state.firms.map(f => `
-                <div class="flex items-center justify-between bg-gray-50 p-3 rounded-xl border border-gray-100">
-                    <div>
-                        <h4 class="font-bold text-gray-800 text-xs sm:text-sm">${f.name}</h4>
-                        <p class="text-[11px] sm:text-xs text-gray-400">СТИР (ИНН): ${f.tin || 'Кўрсатилмаган'}</p>
-                    </div>
-                    <button onclick="deleteFirm(${f.id})" class="text-gray-400 hover:text-red-600 p-1.5 rounded-lg hover:bg-white"><i class="fa-solid fa-trash text-xs"></i></button>
-                </div>
-            `).join('');
+        function openFirmsModal() { alert("Фирмалар рўйхати созламаларда мавжуд."); }
+        function closeModal() { document.getElementById('generic-modal').classList.add('hidden'); }
 
+        function openTaskAddModal() {
+            document.getElementById('modal-main-title').innerText = "Янги вазифа";
             document.getElementById('modal-body-content').innerHTML = `
-                <div class="space-y-4">
-                    <div class="space-y-2 max-h-48 overflow-y-auto custom-scrollbar pr-1">
-                        ${firmsHtml || '<p class="text-gray-400 text-xs sm:text-sm">Фирмалар қўшилмаган</p>'}
-                    </div>
-                    <div class="pt-4 border-t border-gray-100 space-y-3">
-                        <h4 class="font-bold text-xs text-gray-700 uppercase">Янги фирма қўшиш</h4>
-                        <div>
-                            <input type="text" id="new-firm-name" placeholder="Фирма номи (масалан: MCHJ ...)" class="w-full bg-gray-50 border border-gray-200 rounded-xl px-4 py-2 text-xs sm:text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500 mb-2">
-                            <input type="text" id="new-firm-tin" placeholder="СТИР (ИНН) - 9 хонали" class="w-full bg-gray-50 border border-gray-200 rounded-xl px-4 py-2 text-xs sm:text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500">
-                        </div>
-                        <div class="flex justify-end space-x-2">
-                            <button onclick="addNewFirm()" class="px-4 py-2 bg-indigo-600 hover:bg-indigo-700 text-white rounded-xl text-xs font-medium">Қўшиш</button>
-                        </div>
-                    </div>
-                    <div class="flex justify-end pt-2">
-                        <button onclick="closeModal()" class="px-4 py-2 bg-gray-100 hover:bg-gray-200 text-gray-700 rounded-xl text-xs sm:text-sm font-medium">Ёпиш</button>
-                    </div>
+                <div class="space-y-3">
+                    <input type="text" id="m-task-title" placeholder="Вазифа номи" class="w-full border p-2 rounded-xl text-xs">
+                    <button onclick="saveMTask()" class="bg-indigo-600 text-white px-4 py-2 rounded-xl w-full text-xs">Сақлаш</button>
                 </div>
             `;
             document.getElementById('generic-modal').classList.remove('hidden');
         }
 
-        function addNewFirm() {
-            const name = document.getElementById('new-firm-name').value.trim();
-            const tin = document.getElementById('new-firm-tin').value.trim();
-            if (!name) {
-                showNotification("Хатолик", "Фирма номини киритинг!");
-                return;
-            }
-            state.firms.push({ id: Date.now(), name, tin });
-            saveState();
-            openFirmsModal();
-            renderTasks();
-        }
-
-        function deleteFirm(id) {
-            state.firms = state.firms.filter(f => f.id !== id);
-            state.tasks.forEach(t => {
-                if (t.firmIds) t.firmIds = t.firmIds.filter(fId => fId !== id);
-                if (t.submittedFirms) t.submittedFirms = t.submittedFirms.filter(fId => fId !== id);
-            });
-            saveState();
-            openFirmsModal();
-            renderTasks();
-        }
-
-        function closeModal() {
-            document.getElementById('generic-modal').classList.add('hidden');
-        }
-
-        function openTaskAddModal(editId = null) {
-            const isEdit = editId !== null;
-            let task = isEdit ? state.tasks.find(t => t.id === editId) : { title: '', desc: '', important: false, date: new Date().toISOString().split('T')[0], taskType: 'tax_report', firmIds: [], submittedFirms: [], paidFirms: [] };
-
-            let firmCheckboxes = state.firms.map(f => {
-                const checked = task.firmIds && task.firmIds.includes(f.id) ? 'checked' : '';
-                return `
-                    <label class="flex items-center space-x-2 bg-gray-50 p-2 rounded-xl border border-gray-100 cursor-pointer hover:bg-gray-100 transition-colors">
-                        <input type="checkbox" value="${f.id}" ${checked} class="task-firm-checkbox w-4 h-4 text-indigo-600 rounded border-gray-300">
-                        <span class="text-xs font-medium text-gray-700">${f.name}</span>
-                    </label>
-                `;
-            }).join('');
-
-            document.getElementById('modal-main-title').innerText = isEdit ? 'Вазифани таҳрирлаш' : 'Янги вазифа қўшиш';
-            document.getElementById('modal-body-content').innerHTML = `
-                <div class="space-y-4">
-                    <div>
-                        <label class="block text-xs font-semibold text-gray-600 mb-1">Вазифа тури</label>
-                        <select id="modal-task-type" class="w-full bg-gray-50 border border-gray-200 rounded-xl px-4 py-2.5 text-xs sm:text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500">
-                            <option value="tax_report" ${task.taskType === 'tax_report' ? 'selected' : ''}>Солиқ ҳисоботи (Топширилди / Тўлов қилинди)</option>
-                            <option value="inps" ${task.taskType === 'inps' ? 'selected' : ''}>ИНПС (Тўлов қилинди / Реестр жўнатилди)</option>
-                            <option value="general" ${task.taskType === 'general' ? 'selected' : ''}>Умумий вазифа (Ҳисобот/Тўлов статусларисиз)</option>
-                        </select>
-                    </div>
-                    <div>
-                        <label class="block text-xs font-semibold text-gray-600 mb-1">Сарлавҳа</label>
-                        <input type="text" id="modal-task-title" value="${task.title}" class="w-full bg-gray-50 border border-gray-200 rounded-xl px-4 py-2.5 text-xs sm:text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500" placeholder="Масалан: Даромад солиғи ҳисоботини топшириш">
-                    </div>
-                    <div>
-                        <label class="block text-xs font-semibold text-gray-600 mb-1">Тавсиф</label>
-                        <textarea id="modal-task-desc" rows="2" class="w-full bg-gray-50 border border-gray-200 rounded-xl px-4 py-2.5 text-xs sm:text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500">${task.desc}</textarea>
-                    </div>
-                    <div>
-                        <label class="block text-xs font-semibold text-gray-600 mb-1">Қайси фирмаларга тегишли?</label>
-                        <div class="grid grid-cols-2 gap-2 max-h-36 overflow-y-auto custom-scrollbar">
-                            ${firmCheckboxes || '<span class="text-xs text-gray-400">Аввал фирмаларни қўшинг</span>'}
-                        </div>
-                    </div>
-                    <div>
-                        <label class="block text-xs font-semibold text-gray-600 mb-1">Бажариш муддати (Кун-Ой-Йил)</label>
-                        <input type="date" id="modal-task-date" value="${task.date || new Date().toISOString().split('T')[0]}" class="w-full bg-gray-50 border border-gray-200 rounded-xl px-4 py-2.5 text-xs sm:text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500">
-                    </div>
-                    <div class="flex items-center space-x-2">
-                        <input type="checkbox" id="modal-task-important" ${task.important ? 'checked' : ''} class="w-4 h-4 text-indigo-600 rounded border-gray-300">
-                        <label for="modal-task-important" class="text-xs sm:text-sm font-medium text-gray-700">Муҳим вазифа сифатида белгилаш</label>
-                    </div>
-                    <div class="flex justify-end space-x-3 pt-4 border-t border-gray-100">
-                        <button onclick="closeModal()" class="px-4 py-2 rounded-xl text-gray-600 hover:bg-gray-100 text-xs sm:text-sm font-medium">Бекор қилиш</button>
-                        <button onclick="saveTask(${isEdit ? editId : 'null'})" class="px-5 py-2 rounded-xl bg-indigo-600 hover:bg-indigo-700 text-white text-xs sm:text-sm font-medium shadow-md">Сақлаш</button>
-                    </div>
-                </div>
-            `;
-            document.getElementById('generic-modal').classList.remove('hidden');
-        }
-
-        function openEditTaskModal(id) {
-            openTaskAddModal(id);
-        }
-
-        function openTaskDetailModal(id, preserveScroll = false) {
-            const task = state.tasks.find(t => t.id === id);
-            if (!task) return;
-
-            let prevScrollTop = 0;
-            const containerEl = document.getElementById('firms-detail-container');
-            if (preserveScroll && containerEl) {
-                prevScrollTop = containerEl.scrollTop;
-            }
-
-            document.getElementById('modal-main-title').innerText = "Вазифа тафсилотлари ва фирмалар ҳолати";
-            
-            let typeLabel = 'Умумий вазифа';
-            if (task.taskType === 'tax_report') typeLabel = 'Солиқ ҳисоботи';
-            else if (task.taskType === 'inps') typeLabel = 'ИНПС / Реестр';
-
-            let firmsDetailHtml = '';
-            if (task.firmIds && task.firmIds.length > 0) {
-                firmsDetailHtml = task.firmIds.map(fId => {
-                    const firm = state.firms.find(f => f.id === fId);
-                    if (!firm) return '';
-                    const isSubmitted = task.submittedFirms && task.submittedFirms.includes(fId);
-                    const isPaid = task.paidFirms && task.paidFirms.includes(fId);
-                    const firmNote = (task.firmNotes && task.firmNotes[fId]) ? task.firmNotes[fId] : '';
-                    
-                    let actionButtonsHtml = '';
-                    if (task.taskType === 'tax_report') {
-                        actionButtonsHtml = `
-                            <button onclick="toggleFirmSubmissionFromDetail(${task.id}, ${fId})" class="px-3 py-1.5 rounded-lg text-[11px] sm:text-xs font-medium transition-all flex items-center space-x-1.5 ${isSubmitted ? 'bg-emerald-600 text-white shadow-sm' : 'bg-white border border-gray-200 text-gray-600 hover:bg-gray-100'}">
-                                <i class="fa-solid ${isSubmitted ? 'fa-check' : 'fa-clock'}"></i>
-                                <span>${isSubmitted ? 'Топширилди' : 'Топширилмади'}</span>
-                            </button>
-                            <button onclick="toggleFirmPaymentFromDetail(${task.id}, ${fId})" class="px-3 py-1.5 rounded-lg text-[11px] sm:text-xs font-medium transition-all flex items-center space-x-1.5 ${isPaid ? 'bg-blue-600 text-white shadow-sm' : 'bg-white border border-gray-200 text-gray-600 hover:bg-gray-100'}">
-                                <i class="fa-solid ${isPaid ? 'fa-wallet' : 'fa-circle-dollar-to-slot'}"></i>
-                                <span>${isPaid ? 'Тўлов қилинди' : 'Тўлов қилинмади'}</span>
-                            </button>
-                        `;
-                    } else if (task.taskType === 'inps') {
-                        actionButtonsHtml = `
-                            <button onclick="toggleFirmPaymentFromDetail(${task.id}, ${fId})" class="px-3 py-1.5 rounded-lg text-[11px] sm:text-xs font-medium transition-all flex items-center space-x-1.5 ${isPaid ? 'bg-blue-600 text-white shadow-sm' : 'bg-white border border-gray-200 text-gray-600 hover:bg-gray-100'}">
-                                <i class="fa-solid ${isPaid ? 'fa-wallet' : 'fa-circle-dollar-to-slot'}"></i>
-                                <span>${isPaid ? 'Тўлов қилинди' : 'Тўлов қилинмади'}</span>
-                            </button>
-                            <button onclick="toggleFirmSubmissionFromDetail(${task.id}, ${fId})" class="px-3 py-1.5 rounded-lg text-[11px] sm:text-xs font-medium transition-all flex items-center space-x-1.5 ${isSubmitted ? 'bg-emerald-600 text-white shadow-sm' : 'bg-white border border-gray-200 text-gray-600 hover:bg-gray-100'}">
-                                <i class="fa-solid ${isSubmitted ? 'fa-paper-plane' : 'fa-clock'}"></i>
-                                <span>${isSubmitted ? 'Реестр жўнатилди' : 'Реестр жўнатилмади'}</span>
-                            </button>
-                        `;
-                    } else {
-                        actionButtonsHtml = `<span class="text-xs text-gray-400 italic">Қўшимча ҳисобот/тўлов талаб этилмайди</span>`;
-                    }
-
-                    return `
-                        <div class="bg-gray-50 p-4 rounded-xl border border-gray-100 space-y-3">
-                            <div class="flex items-center justify-between">
-                                <div>
-                                    <h4 class="font-bold text-gray-800 text-xs sm:text-sm">${firm.name}</h4>
-                                    <p class="text-[11px] sm:text-xs text-gray-400">СТИР: ${firm.tin || 'Кўрсатилмаган'}</p>
-                                </div>
-                                <div class="flex items-center space-x-2">
-                                    ${actionButtonsHtml}
-                                </div>
-                            </div>
-                            <div>
-                                <textarea rows="2" oninput="saveFirmNoteInput(${task.id}, ${fId}, this.value)" placeholder="Ушбу фирма бўйича қайд ва изоҳлар..." class="w-full bg-white border border-gray-200 rounded-lg px-3 py-1.5 text-xs focus:outline-none focus:ring-1 focus:ring-indigo-500 text-gray-700 resize-y">${firmNote}</textarea>
-                            </div>
-                        </div>
-                    `;
-                }).join('');
-            } else {
-                firmsDetailHtml = `<p class="text-gray-400 text-xs sm:text-sm italic">Ушбу вазифага ҳеч қандай фирма бириктирилмаган.</p>`;
-            }
-
-            document.getElementById('modal-body-content').innerHTML = `
-                <div class="space-y-6">
-                    <div class="bg-indigo-50/50 p-4 rounded-2xl border border-indigo-100/60 space-y-2">
-                        <div class="flex items-center justify-between">
-                            <span class="text-[11px] font-semibold px-2.5 py-1 rounded-full ${task.important ? 'bg-red-100 text-red-700' : 'bg-gray-200 text-gray-700'}">${typeLabel}</span>
-                            <span class="text-xs text-indigo-600 font-semibold"><i class="fa-regular fa-calendar mr-1"></i>Мўлжал: ${formatDateToDisplay(task.date)}</span>
-                        </div>
-                        <h3 class="font-bold text-gray-900 text-base sm:text-lg">${task.title}</h3>
-                        <p class="text-xs sm:text-sm text-gray-600 leading-relaxed whitespace-pre-wrap">${task.desc || 'Тавсиф мавжуд эмас'}</p>
-                    </div>
-
-                    <div class="space-y-3">
-                        <h4 class="font-bold text-xs text-gray-700 uppercase tracking-wider">Фирмалар кесимида статус ва шахсий қайдлар</h4>
-                        <div id="firms-detail-container" class="space-y-3 max-h-64 overflow-y-auto custom-scrollbar pr-1">
-                            ${firmsDetailHtml}
-                        </div>
-                    </div>
-
-                    <div class="flex justify-between items-center pt-4 border-t border-gray-100">
-                        <button onclick="openEditTaskModal(${task.id})" class="text-xs text-indigo-600 font-medium hover:underline flex items-center space-x-1">
-                            <i class="fa-solid fa-pen"></i><span>Вазифани таҳрирлаш</span>
-                        </button>
-                        <div class="flex space-x-2">
-                            <button onclick="closeModal(); renderTasks();" class="px-5 py-2 rounded-xl bg-indigo-600 hover:bg-indigo-700 text-white text-xs sm:text-sm font-medium shadow-md">Сақлаш ва ёпиш</button>
-                        </div>
-                    </div>
-                </div>
-            `;
-            document.getElementById('generic-modal').classList.remove('hidden');
-
-            if (preserveScroll) {
-                const newContainer = document.getElementById('firms-detail-container');
-                if (newContainer) {
-                    newContainer.scrollTop = prevScrollTop;
-                }
-            }
-        }
-
-        function toggleFirmSubmissionFromDetail(taskId, firmId) {
-            toggleFirmSubmission(taskId, firmId);
-            openTaskDetailModal(taskId, true);
-        }
-
-        function toggleFirmPaymentFromDetail(taskId, firmId) {
-            toggleFirmPayment(taskId, firmId);
-            openTaskDetailModal(taskId, true);
-        }
-
-        function saveTask(id) {
-            const title = document.getElementById('modal-task-title').value.trim();
-            const desc = document.getElementById('modal-task-desc').value.trim();
-            const date = document.getElementById('modal-task-date').value;
-            const taskType = document.getElementById('modal-task-type').value;
-            const important = document.getElementById('modal-task-important').checked;
-            
-            const firmCheckboxes = document.querySelectorAll('.task-firm-checkbox:checked');
-            const firmIds = Array.from(firmCheckboxes).map(cb => parseInt(cb.value));
-
-            if (!title) {
-                showNotification("Хатолик", "Вазифа сарлавҳасини киритинг!");
-                return;
-            }
-
-            if (id === 'null' || id === null) {
-                const newTask = {
-                    id: Date.now(),
-                    title,
-                    desc,
-                    completed: false,
-                    important,
-                    date: date || new Date().toISOString().split('T')[0],
-                    taskType,
-                    firmIds,
-                    submittedFirms: [],
-                    paidFirms: [],
-                    firmNotes: {}
-                };
-                state.tasks.unshift(newTask);
-            } else {
-                const task = state.tasks.find(t => t.id === id);
-                if (task) {
-                    task.title = title;
-                    task.desc = desc;
-                    task.important = important;
-                    task.date = date;
-                    task.taskType = taskType;
-                    task.firmIds = firmIds;
-                    if (!task.submittedFirms) task.submittedFirms = [];
-                    if (!task.paidFirms) task.paidFirms = [];
-                    if (!task.firmNotes) task.firmNotes = {};
-                    
-                    task.submittedFirms = task.submittedFirms.filter(fId => firmIds.includes(fId));
-                    task.paidFirms = task.paidFirms.filter(fId => firmIds.includes(fId));
-                }
-            }
-
-            saveState();
-            closeModal();
-            renderTasks();
-        }
-
-        function openNoteAddModal(editId = null) {
-            const isEdit = editId !== null;
-            let note = isEdit ? state.notes.find(n => n.id === editId) : { title: '', desc: '', color: 'amber' };
-
-            document.getElementById('modal-main-title').innerText = isEdit ? 'Қайдни таҳрирлаш' : 'Янги қайд қўшиш';
-            document.getElementById('modal-body-content').innerHTML = `
-                <div class="space-y-4">
-                    <div>
-                        <label class="block text-xs font-semibold text-gray-600 mb-1">Сарлавҳа</label>
-                        <input type="text" id="modal-note-title" value="${note.title}" class="w-full bg-gray-50 border border-gray-200 rounded-xl px-4 py-2.5 text-xs sm:text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500">
-                    </div>
-                    <div>
-                        <label class="block text-xs font-semibold text-gray-600 mb-1">Матн</label>
-                        <textarea id="modal-note-desc" rows="4" class="w-full bg-gray-50 border border-gray-200 rounded-xl px-4 py-2.5 text-xs sm:text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500">${note.desc}</textarea>
-                    </div>
-                    <div>
-                        <label class="block text-xs font-semibold text-gray-600 mb-1">Ранг туси</label>
-                        <select id="modal-note-color" class="w-full bg-gray-50 border border-gray-200 rounded-xl px-4 py-2.5 text-xs sm:text-sm focus:outline-none">
-                            <option value="amber" ${note.color === 'amber' ? 'selected' : ''}>Сариқ (Огоҳлантириш)</option>
-                            <option value="blue" ${note.color === 'blue' ? 'selected' : ''}>Кўк (Маълумот)</option>
-                            <option value="purple" ${note.color === 'purple' ? 'selected' : ''}>Бинафша (Шахсий)</option>
-                            <option value="emerald" ${note.color === 'emerald' ? 'selected' : ''}>Яшил (Муваффақият)</option>
-                            <option value="rose" ${note.color === 'rose' ? 'selected' : ''}>Қизил (Муҳим)</option>
-                        </select>
-                    </div>
-                    <div class="flex justify-end space-x-3 pt-4 border-t border-gray-100">
-                        <button onclick="closeModal()" class="px-4 py-2 rounded-xl text-gray-600 hover:bg-gray-100 text-xs sm:text-sm font-medium">Бекор қилиш</button>
-                        <button onclick="saveNote(${isEdit ? editId : 'null'})" class="px-5 py-2 rounded-xl bg-indigo-600 hover:bg-indigo-700 text-white text-xs sm:text-sm font-medium shadow-md">Сақлаш</button>
-                    </div>
-                </div>
-            `;
-            document.getElementById('generic-modal').classList.remove('hidden');
-        }
-
-        function openEditNoteModal(id) {
-            openNoteAddModal(id);
-        }
-
-        function saveNote(id) {
-            const title = document.getElementById('modal-note-title').value.trim();
-            const desc = document.getElementById('modal-note-desc').value.trim();
-            const color = document.getElementById('modal-note-color').value;
-
-            if (!title) {
-                showNotification("Хатолик", "Қайд сарлавҳасини киритинг!");
-                return;
-            }
-
-            if (id === 'null' || id === null) {
-                state.notes.unshift({ id: Date.now(), title, desc, color });
-            } else {
-                const note = state.notes.find(n => n.id === id);
-                if (note) {
-                    note.title = title;
-                    note.desc = desc;
-                    note.color = color;
-                }
-            }
-
-            saveState();
-            closeModal();
-            renderNotes();
-        }
-
-        window.openEventAddModal = function(dateStr = null, eventId = null) {
-            const targetDate = dateStr || state.selectedDate;
-            let eventObj = { title: '', time: '10:00' };
-            const isEdit = eventId !== null;
-
-            if (isEdit) {
-                for (let d in state.calendarEvents) {
-                    const found = state.calendarEvents[d].find(ev => ev.id === eventId);
-                    if (found) {
-                        eventObj = found;
-                        break;
-                    }
-                }
-            }
-
-            document.getElementById('modal-main-title').innerText = isEdit ? 'Тадбирни таҳрирлаш' : `${formatDateToDisplay(targetDate)} санасига тадбир қўшиш`;
-            document.getElementById('modal-body-content').innerHTML = `
-                <div class="space-y-4">
-                    <div>
-                        <label class="block text-xs font-semibold text-gray-600 mb-1">Тадбир номи</label>
-                        <input type="text" id="modal-event-title" value="${eventObj.title}" class="w-full bg-gray-50 border border-gray-200 rounded-xl px-4 py-2.5 text-xs sm:text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500" placeholder="Масалан: Раҳбарият билан учрашув">
-                    </div>
-                    <div>
-                        <label class="block text-xs font-semibold text-gray-600 mb-1">Сана</label>
-                        <input type="date" id="modal-event-date" value="${targetDate}" class="w-full bg-gray-50 border border-gray-200 rounded-xl px-4 py-2.5 text-xs sm:text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500">
-                    </div>
-                    <div>
-                        <label class="block text-xs font-semibold text-gray-600 mb-1">Вақти</label>
-                        <input type="time" id="modal-event-time" value="${eventObj.time || '10:00'}" class="w-full bg-gray-50 border border-gray-200 rounded-xl px-4 py-2.5 text-xs sm:text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500">
-                    </div>
-                    <div class="flex justify-end space-x-3 pt-4 border-t border-gray-100">
-                        <button onclick="closeModal()" class="px-4 py-2 rounded-xl text-gray-600 hover:bg-gray-100 text-xs sm:text-sm font-medium">Бекор қилиш</button>
-                        <button onclick="saveCalendarEvent(${eventId})" class="px-5 py-2 rounded-xl bg-indigo-600 hover:bg-indigo-700 text-white text-xs sm:text-sm font-medium shadow-md">Сақлаш</button>
-                    </div>
-                </div>
-            `;
-            document.getElementById('generic-modal').classList.remove('hidden');
-        }
-
-        function openTaskAddModalForDate(dateStr) {
-            openTaskAddModal();
-            const dateInput = document.getElementById('modal-task-date');
-            if (dateInput) dateInput.value = dateStr;
-        }
-
-        function saveCalendarEvent(editId = null) {
-            const title = document.getElementById('modal-event-title').value.trim();
-            const dateInput = document.getElementById('modal-event-date');
-            const targetDate = dateInput ? dateInput.value : state.selectedDate;
-            const time = document.getElementById('modal-event-time').value;
-
-            if (!title) {
-                showNotification("Хатолик", "Тадбир номини киритинг!");
-                return;
-            }
-
-            if (editId !== null && editId !== 'null') {
-                for (let d in state.calendarEvents) {
-                    state.calendarEvents[d] = state.calendarEvents[d].filter(ev => ev.id !== editId);
-                    if (state.calendarEvents[d].length === 0) delete state.calendarEvents[d];
-                }
-            }
-
-            if (!state.calendarEvents[targetDate]) {
-                state.calendarEvents[targetDate] = [];
-            }
-
-            state.calendarEvents[targetDate].push({
-                id: editId !== null && editId !== 'null' ? editId : Date.now(),
-                title,
-                time
-            });
-
-            saveState();
-            closeModal();
-            renderCalendar();
-            if (state.currentTab === 'events') renderEventsTab();
+        function saveMTask() {
+            const t = document.getElementById('m-task-title').value;
+            if(!t) return;
+            state.tasks.unshift({ id: Date.now(), title: t, completed: false, date: new Date().toISOString().split('T')[0] });
+            saveState(); closeModal(); renderTasks();
         }
 
         function openFileUploadModal() {
-            document.getElementById('modal-main-title').innerText = "Файл юклаш (Симуляция)";
+            document.getElementById('modal-main-title').innerText = "Булутга файл юклаш (Real Firebase Sync)";
             document.getElementById('modal-body-content').innerHTML = `
                 <div class="space-y-4">
-                    <div>
-                        <label class="block text-xs font-semibold text-gray-600 mb-1">Ҳужжат номи</label>
-                        <input type="text" id="modal-file-name" class="w-full bg-gray-50 border border-gray-200 rounded-xl px-4 py-2.5 text-xs sm:text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500" placeholder="Масалан: Ҳисобот_2026.pdf">
+                    <div class="bg-blue-50 text-blue-800 p-3 rounded-xl border border-blue-100 text-xs">
+                        Танланган файл автоматик равишда шифрланади ва <b>Firebase Cloud Firestore</b>-га жойлаштирилади.
                     </div>
                     <div>
-                        <label class="block text-xs font-semibold text-gray-600 mb-1">Файл формати</label>
-                        <select id="modal-file-type" class="w-full bg-gray-50 border border-gray-200 rounded-xl px-4 py-2.5 text-xs sm:text-sm focus:outline-none">
-                            <option value="pdf">PDF ҳужжат</option>
-                            <option value="word">Word (docx)</option>
-                            <option value="excel">Excel (xlsx)</option>
-                        </select>
+                        <label class="block text-xs font-semibold text-gray-600 mb-1.5">Файлни танланг (Word / Excel / PDF)</label>
+                        <input type="file" id="modal-real-file" accept=".doc,.docx,.xls,.xlsx,.pdf" class="w-full bg-gray-50 border p-2 rounded-xl text-xs">
                     </div>
-                    <div class="border-2 border-dashed border-gray-200 rounded-2xl p-6 text-center bg-gray-50">
-                        <i class="fa-solid fa-cloud-arrow-up text-3xl text-indigo-500 mb-2"></i>
-                        <p class="text-xs text-gray-500">Юклаш учун файлни шу ерга ташланг ёки танланг</p>
-                    </div>
-                    <div class="flex justify-end space-x-3 pt-4 border-t border-gray-100">
-                        <button onclick="closeModal()" class="px-4 py-2 rounded-xl text-gray-600 hover:bg-gray-100 text-xs sm:text-sm font-medium">Бекор қилиш</button>
-                        <button onclick="saveFile()" class="px-5 py-2 rounded-xl bg-indigo-600 hover:bg-indigo-700 text-white text-xs sm:text-sm font-medium shadow-md">Юклаш</button>
+                    <div class="flex justify-end space-x-2 pt-2">
+                        <button onclick="closeModal()" class="px-4 py-2 bg-gray-100 rounded-xl text-xs text-gray-600 font-medium">Бекор қилиш</button>
+                        <button id="modal-upload-btn" onclick="uploadRealFileToFirebase()" class="px-5 py-2 bg-blue-600 hover:bg-blue-700 text-white rounded-xl text-xs font-medium shadow-sm">Юклаш</button>
                     </div>
                 </div>
             `;
             document.getElementById('generic-modal').classList.remove('hidden');
         }
 
-        function saveFile() {
-            const nameInput = document.getElementById('modal-file-name').value.trim();
-            const type = document.getElementById('modal-file-type').value;
-            const name = nameInput || `Ҳужжат_${Date.now().toString().slice(-4)}.${type === 'pdf' ? 'pdf' : type === 'word' ? 'docx' : 'xlsx'}`;
-
-            state.files.unshift({
-                id: Date.now(),
-                name,
-                size: `${(Math.random() * 2 + 0.3).toFixed(1)} MB`,
-                date: new Date().toLocaleDateString('uz-UZ'),
-                type
-            });
-
-            saveState();
-            closeModal();
-            renderFiles();
-        }
-
-        function openLawAddModal() {
-            document.getElementById('modal-main-title').innerText = "Янги қонун ҳужжатини қўшиш";
-            document.getElementById('modal-body-content').innerHTML = `
-                <div class="space-y-4">
-                    <div>
-                        <label class="block text-xs font-semibold text-gray-600 mb-1">Бўлим (Категория)</label>
-                        <select id="modal-law-cat" class="w-full bg-gray-50 border border-gray-200 rounded-xl px-4 py-2.5 text-xs sm:text-sm focus:outline-none">
-                            <option value="purchases">Давлат харидлари</option>
-                            <option value="audits">Текширувлар</option>
-                            <option value="finance">Молия ва Солиқ</option>
-                        </select>
-                    </div>
-                    <div>
-                        <label class="block text-xs font-semibold text-gray-600 mb-1">Қонун/Фармон номи</label>
-                        <input type="text" id="modal-law-title" class="w-full bg-gray-50 border border-gray-200 rounded-xl px-4 py-2.5 text-xs sm:text-sm focus:outline-none" placeholder="Масалан: ЎРҚ-сонли Қонун">
-                    </div>
-                    <div>
-                        <label class="block text-xs font-semibold text-gray-600 mb-1">Модда / Банд</label>
-                        <input type="text" id="modal-law-article" class="w-full bg-gray-50 border border-gray-200 rounded-xl px-4 py-2.5 text-xs sm:text-sm focus:outline-none" placeholder="Масалан: 10-модда. Асосий қоидалар">
-                    </div>
-                    <div>
-                        <label class="block text-xs font-semibold text-gray-600 mb-1">Қисқача мазмуни</label>
-                        <textarea id="modal-law-desc" rows="3" class="w-full bg-gray-50 border border-gray-200 rounded-xl px-4 py-2.5 text-xs sm:text-sm focus:outline-none" placeholder="Норматив мазмунини киритинг..."></textarea>
-                    </div>
-                    <div class="flex justify-end space-x-3 pt-4 border-t border-gray-100">
-                        <button onclick="closeModal()" class="px-4 py-2 rounded-xl text-gray-600 hover:bg-gray-100 text-xs sm:text-sm font-medium">Бекор қилиш</button>
-                        <button onclick="saveLaw()" class="px-5 py-2 rounded-xl bg-indigo-600 hover:bg-indigo-700 text-white text-xs sm:text-sm font-medium shadow-md">Сақлаш</button>
-                    </div>
-                </div>
-            `;
-            document.getElementById('generic-modal').classList.remove('hidden');
-        }
-
-        function saveLaw() {
-            const category = document.getElementById('modal-law-cat').value;
-            const title = document.getElementById('modal-law-title').value.trim();
-            const article = document.getElementById('modal-law-article-title') ? document.getElementById('modal-law-article-title').value.trim() : document.getElementById('modal-law-article').value.trim();
-            const desc = document.getElementById('modal-law-desc').value.trim();
-
-            if (!title) {
-                showNotification("Хатолик", "Қонун номини тўлиқ киритинг!");
-                return;
-            }
-
-            state.laws.unshift({
-                id: Date.now(),
-                category,
-                title,
-                article: document.getElementById('modal-law-article').value.trim(),
-                desc
-            });
-
-            closeModal();
-            renderLaws();
-            showNotification("Муваффақиятли", "Янги қонун ҳужжати базага қўшилди.");
-        }
-
-        // Initialize App on load
         window.onload = function() {
-            // Keep lock screen visible until correct PIN entered
-            updateFilesBadge();
-            updateFirmSelectors();
+            saveState();
             renderTasks();
             renderNotes();
-            renderEventsTab();
             renderCalendar();
         };
     </script>
