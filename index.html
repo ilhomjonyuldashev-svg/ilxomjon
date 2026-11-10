@@ -323,6 +323,12 @@
             try { const v = JSON.parse(localStorage.getItem(key)); return v ?? fallback; } catch (e) { return fallback; }
         }
 
+        // Firma nomlarini alifbo bö'yiça saralaş («» va qoştirnoqlar hisobga olinmaydi)
+        function firmSortKey(name) { return String(name || '').replace(/^[\s«»"'„“”`]+/, '').toLocaleLowerCase('uz'); }
+        function compareFirms(a, b) { return firmSortKey(a.name).localeCompare(firmSortKey(b.name), ['uz', 'ru'], { numeric: true }); }
+        function sortedFirms() { return [...state.firms].sort(compareFirms); }
+        function firmsByIds(ids) { return (ids || []).map(id => state.firms.find(f => f.id === id)).filter(Boolean).sort(compareFirms); }
+
         const DEFAULT_LAWS = [
             { id: 1, category: 'purchases', title: '«Давлат харидлари тўғрисида»ги ЎРҚ-684-сон Қонун', article: 'Давлат харидларини амалга ошириш тартиби', desc: 'Харид тартиб-таомилларида рақобат ва шаффофлик талаблари, электрон дўкон ва аукцион орқали харид шартлари.', url: '' },
             { id: 3, category: 'finance', title: 'Ўзбекистон Республикаси Солиқ кодекси', article: 'ҚҚС бўйича қоидалар', desc: 'Ҳисобот даври, солиқ суммасини ҳисобга олиш, электрон ҳисоб-фактуралар талаблари.', url: '' }
@@ -535,7 +541,7 @@
             const sel = document.getElementById('task-firm-filter');
             if (!sel) return;
             const cur = sel.value;
-            sel.innerHTML = `<option value="all">Барча фирмалар</option>` + state.firms.map(f => `<option value="${f.id}">${esc(f.name)}</option>`).join('');
+            sel.innerHTML = `<option value="all">Барча фирмалар</option>` + sortedFirms().map(f => `<option value="${f.id}">${esc(f.name)}</option>`).join('');
             sel.value = state.firms.some(f => String(f.id) === cur) ? cur : 'all';
         }
 
@@ -736,6 +742,45 @@
             await sendTelegramApi(tg.token, tg.chat, msg);
         }
 
+        // ===== Такрорланиш =====
+        const REPEAT_OPTIONS = {
+            none: 'Такрорланмайди', weekly: 'Ҳар ҳафта', monthly: 'Ҳар ой', quarterly: 'Ҳар чорак', yearly: 'Ҳар йил'
+        };
+        // Ойни қўшганда кунни сақлаймиз: 31-январ → 28/29-феврал → 31-март
+        function addMonthsAnchored(dateStr, months, anchorDay) {
+            const [y, m] = dateStr.split('-').map(Number);
+            const target = new Date(y, m - 1 + months, 1);
+            const lastDay = new Date(target.getFullYear(), target.getMonth() + 1, 0).getDate();
+            target.setDate(Math.min(anchorDay, lastDay));
+            return localDateStr(target);
+        }
+        function nextRepeatDate(task) {
+            const anchor = task.repeatDay || Number(task.date.split('-')[2]);
+            switch (task.repeat) {
+                case 'weekly': return addDays(task.date, 7);
+                case 'monthly': return addMonthsAnchored(task.date, 1, anchor);
+                case 'quarterly': return addMonthsAnchored(task.date, 3, anchor);
+                case 'yearly': return addMonthsAnchored(task.date, 12, anchor);
+                default: return null;
+            }
+        }
+        // Бажарилган такрорланувчи вазифанинг кейинги нусхасини яратади (фақат бир марта)
+        function spawnNextOccurrence(task) {
+            if (!task.repeat || task.repeat === 'none' || !task.date) return null;
+            if (task.nextId && findTask(task.nextId)) return null;
+            const nextDate = nextRepeatDate(task);
+            if (!nextDate || (task.repeatUntil && nextDate > task.repeatUntil)) return null;
+            const next = {
+                id: Date.now(), title: task.title, desc: task.desc, important: task.important,
+                taskType: task.taskType, firmIds: [...(task.firmIds || [])],
+                date: nextDate, repeat: task.repeat, repeatDay: task.repeatDay, repeatUntil: task.repeatUntil || '',
+                completed: false, submittedFirms: [], paidFirms: [], firmNotes: {}
+            };
+            task.nextId = next.id;
+            state.tasks.unshift(next);
+            return next;
+        }
+
         // ===== Вазифалар =====
         const TYPE_BADGES = {
             tax_report: '<span class="text-[9px] bg-purple-50 text-purple-700 px-2 py-0.5 rounded-full font-medium">Солиқ ҳисоботи</span>',
@@ -779,7 +824,7 @@
                     if (t.date < today) dateCls = "text-red-600 bg-red-50 font-bold";
                     else if (t.date === today) dateCls = "text-amber-600 bg-amber-50 font-bold";
                 }
-                const firms = (t.firmIds || []).map(fId => state.firms.find(f => f.id === fId)).filter(Boolean);
+                const firms = firmsByIds(t.firmIds);
                 let firmsHtml;
                 if (firms.length) {
                     firmsHtml = `<div class="space-y-1.5 mb-3 pt-2 border-t border-gray-50">
@@ -805,6 +850,7 @@
                                 <input type="checkbox" ${t.completed ? 'checked' : ''} onclick="event.stopPropagation()" onchange="toggleTask(${t.id})" class="w-5 h-5 text-indigo-600 rounded border-gray-300 cursor-pointer mt-0.5 flex-shrink-0">
                                 <div class="flex items-center space-x-1">
                                     ${TYPE_BADGES[t.taskType] || TYPE_BADGES.general}
+                                    ${t.repeat && t.repeat !== 'none' ? `<span class="text-[9px] bg-amber-50 text-amber-700 px-2 py-0.5 rounded-full font-medium" title="${REPEAT_OPTIONS[t.repeat]}"><i class="fa-solid fa-rotate"></i></span>` : ''}
                                     ${t.important ? '<span class="text-[9px] bg-red-50 text-red-600 px-2 py-0.5 rounded-full font-medium">Муҳим</span>' : ''}
                                 </div>
                             </div>
@@ -829,7 +875,9 @@
             const t = findTask(id);
             if (!t) return;
             t.completed = !t.completed;
-            saveState(); renderTasks();
+            const next = t.completed ? spawnNextOccurrence(t) : null;
+            saveState(); renderTasks(); renderCalendar();
+            if (next) showNotification('Кейинги вазифа яратилди', `«${t.title}» — кейинги муддат: ${formatDateToDisplay(next.date)}`, 'fa-solid fa-rotate');
         }
 
         function toggleInList(arr, v) { const i = arr.indexOf(v); i > -1 ? arr.splice(i, 1) : arr.push(v); }
@@ -860,9 +908,9 @@
 
         function openTaskAddModal(editId = null, presetDate = null) {
             const isEdit = editId !== null;
-            const task = isEdit ? findTask(editId) : { title: '', desc: '', important: false, date: presetDate || todayStr(), taskType: 'tax_report', firmIds: [] };
+            const task = isEdit ? findTask(editId) : { title: '', desc: '', important: false, date: presetDate || todayStr(), taskType: 'tax_report', firmIds: [], repeat: 'none', repeatUntil: '' };
             if (!task) return;
-            const firmBoxes = state.firms.length ? state.firms.map(f => `
+            const firmBoxes = state.firms.length ? sortedFirms().map(f => `
                 <label class="flex items-center space-x-2 bg-gray-50 p-2 rounded-xl border border-gray-100 cursor-pointer hover:bg-gray-100">
                     <input type="checkbox" value="${f.id}" ${(task.firmIds || []).includes(f.id) ? 'checked' : ''} class="task-firm-checkbox w-4 h-4 text-indigo-600 rounded">
                     <span class="text-xs font-medium text-gray-700">${esc(f.name)}</span>
@@ -894,6 +942,19 @@
                         <label class="block text-xs font-semibold text-gray-600 mb-1">Муддати</label>
                         <input type="date" id="modal-task-date" value="${esc(task.date)}" class="w-full bg-gray-50 border border-gray-200 rounded-xl px-4 py-2.5 text-xs">
                     </div>
+                    <div class="grid grid-cols-2 gap-3">
+                        <div>
+                            <label class="block text-xs font-semibold text-gray-600 mb-1">Такрорланиш</label>
+                            <select id="modal-task-repeat" onchange="document.getElementById('repeat-until-box').classList.toggle('hidden', this.value === 'none')" class="w-full bg-gray-50 border border-gray-200 rounded-xl px-4 py-2.5 text-xs">
+                                ${Object.entries(REPEAT_OPTIONS).map(([k, n]) => `<option value="${k}" ${(task.repeat || 'none') === k ? 'selected' : ''}>${n}</option>`).join('')}
+                            </select>
+                        </div>
+                        <div id="repeat-until-box" class="${(task.repeat || 'none') === 'none' ? 'hidden' : ''}">
+                            <label class="block text-xs font-semibold text-gray-600 mb-1">Тугаш санаси (ихтиёрий)</label>
+                            <input type="date" id="modal-task-repeat-until" value="${esc(task.repeatUntil)}" class="w-full bg-gray-50 border border-gray-200 rounded-xl px-4 py-2.5 text-xs">
+                        </div>
+                    </div>
+                    <p class="text-[11px] text-gray-400 -mt-2">Такрорланувчи вазифа бажарилди деб белгиланганда, кейинги муддат учун янги нусхаси ўзи яратилади.</p>
                     <label class="flex items-center space-x-2">
                         <input type="checkbox" id="modal-task-important" ${task.important ? 'checked' : ''} class="w-4 h-4 text-indigo-600 rounded">
                         <span class="text-xs font-medium text-gray-700">Муҳим</span>
@@ -915,8 +976,15 @@
                 date: document.getElementById('modal-task-date').value,
                 taskType: document.getElementById('modal-task-type').value,
                 important: document.getElementById('modal-task-important').checked,
-                firmIds: [...document.querySelectorAll('.task-firm-checkbox:checked')].map(cb => Number(cb.value))
+                firmIds: [...document.querySelectorAll('.task-firm-checkbox:checked')].map(cb => Number(cb.value)),
+                repeat: document.getElementById('modal-task-repeat').value,
+                repeatUntil: document.getElementById('modal-task-repeat-until').value
             };
+            const err = document.getElementById('modal-task-error');
+            if (data.repeat !== 'none' && !data.date) { err.innerText = 'Такрорланувчи вазифа учун муддатни киритинг.'; err.classList.remove('hidden'); return; }
+            if (data.repeat === 'none') data.repeatUntil = '';
+            // Ойлик/чораклик/йиллик такрор учун асосий кун (масалан, ҳар ойнинг 25-куни)
+            data.repeatDay = data.date ? Number(data.date.split('-')[2]) : null;
             if (id === null) {
                 state.tasks.unshift({ id: Date.now(), completed: false, submittedFirms: [], paidFirms: [], firmNotes: {}, ...data });
             } else {
@@ -931,7 +999,7 @@
             if (!task) return;
             const prev = document.getElementById('firms-detail-container');
             const prevScroll = preserveScroll && prev ? prev.scrollTop : 0;
-            const firms = (task.firmIds || []).map(fId => state.firms.find(f => f.id === fId)).filter(Boolean);
+            const firms = firmsByIds(task.firmIds);
             const isGeneral = task.taskType === 'general';
             const firmsHtml = firms.length ? firms.map(firm => {
                 const sub = (task.submittedFirms || []).includes(firm.id);
@@ -958,7 +1026,7 @@
                     <div class="bg-indigo-50/50 p-4 rounded-2xl border border-indigo-100 space-y-2">
                         <h3 class="font-bold text-gray-900 text-base">${esc(task.title)}</h3>
                         <p class="text-xs text-gray-600 whitespace-pre-wrap">${esc(task.desc)}</p>
-                        <p class="text-[11px] text-indigo-600"><i class="fa-regular fa-calendar mr-1"></i>${formatDateToDisplay(task.date)}</p>
+                        <p class="text-[11px] text-indigo-600"><i class="fa-regular fa-calendar mr-1"></i>${formatDateToDisplay(task.date)}${task.repeat && task.repeat !== 'none' ? ` &nbsp;<i class="fa-solid fa-rotate mr-1"></i>${REPEAT_OPTIONS[task.repeat]}${task.repeatUntil ? ' (' + formatDateToDisplay(task.repeatUntil) + ' гача)' : ''}` : ''}</p>
                     </div>
                     <div class="space-y-3">
                         <h4 class="font-bold text-xs text-gray-700 uppercase">Фирмалар ҳолати</h4>
@@ -974,7 +1042,7 @@
 
         // ===== Фирмалар =====
         function openFirmsModal() {
-            const firmsHtml = state.firms.length ? state.firms.map(f => `
+            const firmsHtml = state.firms.length ? sortedFirms().map(f => `
                 <div class="flex items-center justify-between bg-gray-50 p-3 rounded-xl border border-gray-100">
                     <div>
                         <h4 class="font-bold text-gray-800 text-xs sm:text-sm">${esc(f.name)}</h4>
