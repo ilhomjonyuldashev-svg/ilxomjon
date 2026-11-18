@@ -210,11 +210,29 @@
                 <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 bg-white p-5 rounded-2xl border border-gray-100 shadow-sm">
                     <div>
                         <h2 class="text-lg sm:text-xl font-bold text-gray-900">Ҳужжатлар ва файллар</h2>
-                        <p class="text-xs sm:text-sm text-gray-500">Ҳозирча бу ерда фақат ҳужжатлар рўйхати юритилади. Файлнинг ўзини сақлаш кейинги босқичда уланади.</p>
+                        <p class="text-xs sm:text-sm text-gray-500">Файллар булутда сақланади ва исталган компьютердан юклаб олинади. Битта файл — 15 МБ гача.</p>
                     </div>
                     <button onclick="openFileUploadModal()" class="flex items-center space-x-2 bg-indigo-600 hover:bg-indigo-700 text-white px-4 py-2.5 rounded-xl font-medium text-xs sm:text-sm shadow-sm">
-                        <i class="fa-solid fa-plus"></i><span>Ҳужжат қўшиш</span>
+                        <i class="fa-solid fa-cloud-arrow-up"></i><span>Файл юклаш</span>
                     </button>
+                </div>
+                <div class="bg-white p-4 rounded-2xl border border-gray-100 shadow-sm space-y-3">
+                    <div class="flex flex-col sm:flex-row gap-3">
+                        <div class="flex items-center space-x-3 flex-1">
+                            <i class="fa-solid fa-magnifying-glass text-gray-400 ml-2"></i>
+                            <input type="text" id="file-search" oninput="renderFiles()" placeholder="Файл номи ёки изоҳ бўйича излаш..." class="w-full bg-transparent border-none focus:outline-none text-xs sm:text-sm text-gray-700">
+                        </div>
+                        <select id="file-firm-filter" onchange="renderFiles()" class="bg-gray-50 border border-gray-200 text-gray-700 text-xs rounded-xl px-3 py-2 focus:outline-none focus:ring-2 focus:ring-indigo-500">
+                            <option value="all">Барча фирмалар</option>
+                        </select>
+                    </div>
+                    <div>
+                        <div class="flex justify-between text-[11px] text-gray-500 mb-1">
+                            <span>Банд жой: <b id="storage-used">0 КБ</b> / 1 ГБ (бепул лимит)</span>
+                            <span id="storage-percent">0%</span>
+                        </div>
+                        <div class="w-full h-1.5 bg-gray-100 rounded-full overflow-hidden"><div id="storage-bar" class="h-full bg-indigo-600 rounded-full" style="width:0%"></div></div>
+                    </div>
                 </div>
                 <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4" id="files-grid"></div>
             </div>
@@ -511,6 +529,7 @@
         async function signOutUser() {
             clearTimeout(syncTimer);
             if (cloudReady) await syncDataToCloud();
+            fileBlobCache.clear();
             await window.fb.signOut(window.fb.auth);
         }
 
@@ -585,7 +604,7 @@
         const NAV_IDLE = "w-full flex items-center space-x-3 px-4 py-3 rounded-xl text-gray-300 hover:bg-gray-800 hover:text-white transition-all";
         const SECTIONS = {
             organizer: { view: 'organizer-view', title: 'Органайзер', add: 'Қўшиш' },
-            files: { view: 'files-view', title: 'Файллар', add: 'Ҳужжат қўшиш' },
+            files: { view: 'files-view', title: 'Файллар', add: 'Файл юклаш' },
             law: { view: 'law-view', title: 'Қонунчилик базаси', add: 'Ҳужжат қўшиш' },
             telegram: { view: 'telegram-view', title: 'Созламалар', add: null }
         };
@@ -1084,6 +1103,7 @@
                     ['firmIds', 'submittedFirms', 'paidFirms'].forEach(k => { if (t[k]) t[k] = t[k].filter(x => x !== id); });
                     if (t.firmNotes) delete t.firmNotes[id];
                 });
+                state.files.forEach(f => { if (f.firmId === id) f.firmId = null; });
                 saveState(); openFirmsModal(); renderTasks();
             });
         }
@@ -1293,69 +1313,344 @@
             saveState(); closeModal(); renderCalendar(); renderEventsTab();
         }
 
-        // ===== Файллар (ҳозирча фақат рўйхат) =====
+        // ===== Файллар (Firestore'да бўлакларга бўлиб сақланади) =====
+        // Spark (бепул) тарифда Firebase Storage йўқ, шунинг учун файл 900 КБ лик бўлакларга бўлиниб,
+        // users/{uid}/fileChunks/{fileId}_{n} ҳужжатларига ёзилади (Firestore ҳужжати 1 МБ гача бўлади).
+        const FILE_CHUNK = 900 * 1024;
+        const FILE_MAX = 15 * 1024 * 1024;
+        const STORAGE_SOFT_LIMIT = 900 * 1024 * 1024;   // 1 ГБ бепул лимитдан захира қолдирамиз
+        const fileBlobCache = new Map();
+        let uploadInProgress = false;
+
+        const FILE_ICONS = {
+            pdf: ['fa-file-pdf text-red-500', 'bg-red-50'], word: ['fa-file-word text-blue-500', 'bg-blue-50'],
+            excel: ['fa-file-excel text-emerald-500', 'bg-emerald-50'], image: ['fa-file-image text-amber-500', 'bg-amber-50'],
+            archive: ['fa-file-zipper text-purple-500', 'bg-purple-50'], link: ['fa-link text-sky-500', 'bg-sky-50'],
+            other: ['fa-file text-gray-500', 'bg-gray-50']
+        };
+
+        function detectFileType(name) {
+            const ext = (name.split('.').pop() || '').toLowerCase();
+            if (ext === 'pdf') return 'pdf';
+            if (['doc', 'docx', 'rtf', 'odt'].includes(ext)) return 'word';
+            if (['xls', 'xlsx', 'xlsm', 'csv', 'ods'].includes(ext)) return 'excel';
+            if (['jpg', 'jpeg', 'png', 'gif', 'webp', 'bmp'].includes(ext)) return 'image';
+            if (['zip', 'rar', '7z'].includes(ext)) return 'archive';
+            return 'other';
+        }
+
+        function formatSize(bytes) {
+            if (!bytes) return '0 КБ';
+            if (bytes < 1024 * 1024) return Math.max(1, Math.round(bytes / 1024)) + ' КБ';
+            if (bytes < 1024 * 1024 * 1024) return (bytes / 1024 / 1024).toFixed(1).replace('.', ',') + ' МБ';
+            return (bytes / 1024 / 1024 / 1024).toFixed(2).replace('.', ',') + ' ГБ';
+        }
+
+        function storedBytes() { return state.files.reduce((s, f) => s + (f.stored ? (f.size || 0) : 0), 0); }
+
+        function chunkRef(fileId, i) {
+            const { db, doc } = window.fb;
+            return doc(db, 'users', currentUser.uid, 'fileChunks', `${fileId}_${i}`);
+        }
+
+        function cloudErrorText(err) {
+            if (err && err.code === 'permission-denied') return 'Firestore қоидалари файлларга рухсат бермаяпти. Firebase консолида Firestore → Rules бўлимини янгиланг (янги firestore.rules матни).';
+            if (err && err.code === 'resource-exhausted') return 'Firebase бепул кунлик лимити тугади. Эртага қайта уриниб кўринг.';
+            return 'Хатолик: ' + ((err && (err.code || err.message)) || 'номаълум');
+        }
+
+        function updateFileFirmFilter() {
+            const sel = document.getElementById('file-firm-filter');
+            if (!sel) return;
+            const cur = sel.value;
+            sel.innerHTML = `<option value="all">Барча фирмалар</option><option value="none">Фирмасиз</option>` + sortedFirms().map(f => `<option value="${f.id}">${esc(f.name)}</option>`).join('');
+            sel.value = [...sel.options].some(o => o.value === cur) ? cur : 'all';
+        }
+
         function renderFiles() {
+            updateFileFirmFilter();
+            const used = storedBytes(), pct = Math.min(100, used / (1024 * 1024 * 1024) * 100);
+            document.getElementById('storage-used').innerText = formatSize(used);
+            document.getElementById('storage-percent').innerText = pct.toFixed(pct < 10 ? 1 : 0).replace('.', ',') + '%';
+            const bar = document.getElementById('storage-bar');
+            bar.style.width = pct + '%';
+            bar.className = 'h-full rounded-full ' + (pct > 85 ? 'bg-red-500' : pct > 60 ? 'bg-amber-500' : 'bg-indigo-600');
+
             const grid = document.getElementById('files-grid');
-            if (!state.files.length) {
-                grid.innerHTML = `<div class="col-span-full bg-white p-8 rounded-2xl text-center border border-gray-100 text-gray-400">Ҳужжатлар йўқ</div>`;
+            const search = (document.getElementById('file-search').value || '').toLowerCase();
+            const firmFilter = document.getElementById('file-firm-filter').value;
+            const list = state.files.filter(f => {
+                if (!`${f.name} ${f.note || ''}`.toLowerCase().includes(search)) return false;
+                if (firmFilter === 'none') return !f.firmId;
+                if (firmFilter !== 'all') return f.firmId === Number(firmFilter);
+                return true;
+            });
+            if (!list.length) {
+                grid.innerHTML = `<div class="col-span-full bg-white p-8 rounded-2xl text-center border border-gray-100 text-gray-400">${state.files.length ? 'Файллар топилмади' : 'Ҳали файл йўқ. «Файл юклаш» тугмасини босинг.'}</div>`;
                 return;
             }
-            const icons = {
-                pdf: ['fa-file-pdf text-red-500', 'bg-red-50'], word: ['fa-file-word text-blue-500', 'bg-blue-50'],
-                excel: ['fa-file-excel text-emerald-500', 'bg-emerald-50'], other: ['fa-file text-gray-500', 'bg-gray-50']
-            };
-            grid.innerHTML = state.files.map(f => {
-                const [ic, bg] = icons[f.type] || icons.other;
+            grid.innerHTML = list.map(f => {
+                const kind = f.stored ? (f.type || 'other') : (f.link ? 'link' : (f.type || 'other'));
+                const [ic, bg] = FILE_ICONS[kind] || FILE_ICONS.other;
+                const firm = f.firmId ? state.firms.find(x => x.id === f.firmId) : null;
+                const canPreview = f.stored && (f.type === 'pdf' || f.type === 'image');
+                const meta = [f.date, f.stored ? formatSize(f.size) : (f.link ? 'ҳавола' : 'файлсиз ёзув')].filter(Boolean).join(' • ');
                 return `
-                    <div class="bg-white p-5 rounded-2xl border border-gray-100 shadow-sm flex items-center justify-between group">
-                        <div class="flex items-center space-x-4 min-w-0">
-                            <div class="w-12 h-12 ${bg} rounded-2xl flex items-center justify-center text-xl flex-shrink-0"><i class="fa-solid ${ic}"></i></div>
+                    <div class="bg-white p-4 rounded-2xl border border-gray-100 shadow-sm flex items-center justify-between gap-3 group">
+                        <div class="flex items-center space-x-3 min-w-0 ${f.stored ? 'cursor-pointer' : ''}" ${f.stored ? `onclick="downloadStoredFile(${f.id})"` : ''}>
+                            <div class="w-11 h-11 ${bg} rounded-xl flex items-center justify-center text-lg flex-shrink-0"><i class="fa-solid ${ic}"></i></div>
                             <div class="min-w-0">
-                                <h3 class="font-semibold text-gray-800 truncate text-xs sm:text-sm">${esc(f.name)}</h3>
-                                <p class="text-[11px] sm:text-xs text-gray-400 mt-0.5">${esc(f.date)}${f.note ? ' • ' + esc(f.note) : ''}</p>
+                                <h3 class="font-semibold text-gray-800 truncate text-xs sm:text-sm" title="${esc(f.name)}">${esc(f.name)}</h3>
+                                <p class="text-[11px] text-gray-400 mt-0.5 truncate">${esc(meta)}</p>
+                                ${firm ? `<p class="text-[10px] text-indigo-600 font-medium truncate mt-0.5"><i class="fa-solid fa-building mr-1"></i>${esc(firm.name)}</p>` : ''}
+                                ${f.note ? `<p class="text-[11px] text-gray-500 truncate mt-0.5" title="${esc(f.note)}">${esc(f.note)}</p>` : ''}
                             </div>
                         </div>
-                        <div class="flex items-center space-x-1 opacity-100 sm:opacity-0 group-hover:opacity-100 transition-opacity">
-                            ${f.link ? `<a href="${esc(f.link)}" target="_blank" rel="noopener" class="p-2 text-gray-400 hover:text-indigo-600 rounded-xl hover:bg-gray-50" title="Очиш"><i class="fa-solid fa-arrow-up-right-from-square"></i></a>` : ''}
+                        <div class="flex items-center flex-shrink-0">
+                            ${canPreview ? `<button onclick="previewStoredFile(${f.id})" class="p-2 text-gray-400 hover:text-indigo-600 rounded-xl hover:bg-gray-50" title="Очиб кўриш"><i class="fa-solid fa-eye"></i></button>` : ''}
+                            ${f.stored ? `<button onclick="downloadStoredFile(${f.id})" class="p-2 text-gray-400 hover:text-indigo-600 rounded-xl hover:bg-gray-50" title="Юклаб олиш"><i class="fa-solid fa-download"></i></button>` : ''}
+                            ${f.link ? `<a href="${esc(f.link)}" target="_blank" rel="noopener" class="p-2 text-gray-400 hover:text-indigo-600 rounded-xl hover:bg-gray-50" title="Ҳаволани очиш"><i class="fa-solid fa-arrow-up-right-from-square"></i></a>` : ''}
+                            <button onclick="openFileEditModal(${f.id})" class="p-2 text-gray-400 hover:text-indigo-600 rounded-xl hover:bg-gray-50" title="Таҳрирлаш"><i class="fa-solid fa-pen-to-square"></i></button>
                             <button onclick="deleteFile(${f.id})" class="p-2 text-gray-400 hover:text-red-600 rounded-xl hover:bg-gray-50" title="Ўчириш"><i class="fa-solid fa-trash"></i></button>
                         </div>
                     </div>`;
             }).join('');
         }
 
-        function deleteFile(id) {
-            confirmAction('Ҳужжатни ўчириш', 'Ушбу ёзувни рўйхатдан ўчиришни тасдиқлайсизми?', () => {
-                state.files = state.files.filter(f => f.id !== id);
-                saveState(); renderFiles();
-            });
+        function firmOptionsHtml(selectedId) {
+            return `<option value="">Фирмага боғланмаган</option>` + sortedFirms().map(f => `<option value="${f.id}" ${f.id === selectedId ? 'selected' : ''}>${esc(f.name)}</option>`).join('');
         }
 
         function openFileUploadModal() {
-            openModal('Ҳужжат қўшиш', `
+            if (uploadInProgress) { showNotification('Кутинг', 'Олдинги юклаш ҳали тугамади.'); return; }
+            const preFirm = Number(document.getElementById('file-firm-filter')?.value) || null;
+            openModal('Файл юклаш', `
                 <div class="space-y-4">
-                    <input type="text" id="modal-file-name" placeholder="Ҳужжат номи" class="w-full bg-gray-50 border border-gray-200 rounded-xl px-4 py-2.5 text-xs">
-                    <select id="modal-file-type" class="w-full bg-gray-50 border border-gray-200 rounded-xl px-4 py-2.5 text-xs">
-                        <option value="pdf">PDF</option><option value="word">Word</option><option value="excel">Excel</option><option value="other">Бошқа</option>
-                    </select>
-                    <input type="url" id="modal-file-link" placeholder="Ҳавола (Google Drive ва ҳ.к., ихтиёрий)" class="w-full bg-gray-50 border border-gray-200 rounded-xl px-4 py-2.5 text-xs">
-                    <input type="text" id="modal-file-note" placeholder="Изоҳ (ихтиёрий)" class="w-full bg-gray-50 border border-gray-200 rounded-xl px-4 py-2.5 text-xs">
+                    <label id="file-drop" ondragover="event.preventDefault(); this.classList.add('border-indigo-500','bg-indigo-50')" ondragleave="this.classList.remove('border-indigo-500','bg-indigo-50')" ondrop="onFileDrop(event)"
+                        class="flex flex-col items-center justify-center gap-2 border-2 border-dashed border-gray-300 rounded-2xl p-6 text-center cursor-pointer hover:border-indigo-400 hover:bg-indigo-50/40 transition-all">
+                        <i class="fa-solid fa-cloud-arrow-up text-3xl text-indigo-500"></i>
+                        <span class="text-xs font-medium text-gray-700">Файлларни шу ерга ташланг ёки танлаш учун босинг</span>
+                        <span class="text-[11px] text-gray-400">Бир нечта файл мумкин • ҳар бири 15 МБ гача</span>
+                        <input type="file" id="modal-file-input" multiple class="hidden" onchange="showChosenFiles()">
+                    </label>
+                    <div id="chosen-files" class="space-y-1 text-[11px] text-gray-600"></div>
+                    <select id="modal-file-firm" class="w-full bg-gray-50 border border-gray-200 rounded-xl px-4 py-2.5 text-xs">${firmOptionsHtml(preFirm)}</select>
+                    <input type="text" id="modal-file-note" placeholder="Изоҳ (ихтиёрий, масалан: 2026 йил 3-чорак ҚҚС)" class="w-full bg-gray-50 border border-gray-200 rounded-xl px-4 py-2.5 text-xs">
+                    <details class="text-xs">
+                        <summary class="cursor-pointer text-gray-500">Файл ўрнига ҳавола қўшиш (Google Drive ва ҳ.к.)</summary>
+                        <div class="space-y-2 mt-2">
+                            <input type="text" id="modal-link-name" placeholder="Ҳужжат номи" class="w-full bg-gray-50 border border-gray-200 rounded-xl px-4 py-2.5 text-xs">
+                            <input type="url" id="modal-file-link" placeholder="https://..." class="w-full bg-gray-50 border border-gray-200 rounded-xl px-4 py-2.5 text-xs">
+                        </div>
+                    </details>
+                    <div id="upload-progress" class="hidden space-y-1">
+                        <div class="flex justify-between text-[11px] text-gray-600"><span id="upload-label">Юкланмоқда...</span><span id="upload-pct">0%</span></div>
+                        <div class="w-full h-2 bg-gray-100 rounded-full overflow-hidden"><div id="upload-bar" class="h-full bg-indigo-600 rounded-full transition-all" style="width:0%"></div></div>
+                    </div>
+                    <p id="upload-error" class="text-xs text-red-600 hidden whitespace-pre-line"></p>
                     <div class="flex justify-end space-x-3 pt-4 border-t border-gray-100">
-                        <button onclick="closeModal()" class="px-4 py-2 rounded-xl text-gray-600 text-xs">Бекор қилиш</button>
-                        <button onclick="saveFile()" class="px-5 py-2 bg-indigo-600 text-white rounded-xl text-xs font-medium">Қўшиш</button>
+                        <button id="upload-cancel" onclick="closeModal()" class="px-4 py-2 rounded-xl text-gray-600 text-xs">Бекор қилиш</button>
+                        <button id="upload-start" onclick="startUpload()" class="px-5 py-2 bg-indigo-600 text-white rounded-xl text-xs font-medium">Юклаш</button>
                     </div>
                 </div>`);
         }
 
-        function saveFile() {
-            const name = document.getElementById('modal-file-name').value.trim();
-            if (!name) return;
-            let link = document.getElementById('modal-file-link').value.trim();
-            if (link && !/^https?:\/\//i.test(link)) link = '';
+        function onFileDrop(e) {
+            e.preventDefault();
+            const input = document.getElementById('modal-file-input');
+            input.files = e.dataTransfer.files;
+            document.getElementById('file-drop').classList.remove('border-indigo-500', 'bg-indigo-50');
+            showChosenFiles();
+        }
+
+        function showChosenFiles() {
+            const files = [...document.getElementById('modal-file-input').files];
+            document.getElementById('chosen-files').innerHTML = files.map(f =>
+                `<div class="flex justify-between bg-gray-50 rounded-lg px-3 py-1.5 ${f.size > FILE_MAX ? 'text-red-600' : ''}"><span class="truncate mr-2">${esc(f.name)}</span><span class="flex-shrink-0">${formatSize(f.size)}${f.size > FILE_MAX ? ' — жуда катта' : ''}</span></div>`).join('');
+        }
+
+        function setUploadProgress(label, done, total) {
+            document.getElementById('upload-progress').classList.remove('hidden');
+            const pct = total ? Math.round(done / total * 100) : 0;
+            document.getElementById('upload-label').innerText = label;
+            document.getElementById('upload-pct').innerText = pct + '%';
+            document.getElementById('upload-bar').style.width = pct + '%';
+        }
+
+        async function deleteChunks(fileId, count) {
+            const { db, writeBatch } = window.fb;
+            for (let i = 0; i < count; i += 400) {
+                const batch = writeBatch(db);
+                for (let j = i; j < Math.min(count, i + 400); j++) batch.delete(chunkRef(fileId, j));
+                await batch.commit();
+            }
+        }
+
+        async function uploadOneFile(file, firmId, note, idx, total) {
+            const { setDoc, Bytes } = window.fb;
+            const buf = new Uint8Array(await file.arrayBuffer());
+            const count = Math.max(1, Math.ceil(buf.length / FILE_CHUNK));
+            const id = Date.now() + idx;
+            let written = 0;
+            try {
+                for (let i = 0; i < count; i++) {
+                    const part = buf.subarray(i * FILE_CHUNK, (i + 1) * FILE_CHUNK);
+                    await setDoc(chunkRef(id, i), { d: Bytes.fromUint8Array(part), i, n: count });
+                    written++;
+                    setUploadProgress(`${idx + 1}/${total}: ${file.name}`, i + 1, count);
+                }
+            } catch (err) {
+                try { await deleteChunks(id, written); } catch (e) { }
+                throw err;
+            }
             state.files.unshift({
-                id: Date.now(), name, type: document.getElementById('modal-file-type').value, link,
-                note: document.getElementById('modal-file-note').value.trim(), date: formatDateToDisplay(todayStr())
+                id, name: file.name, type: detectFileType(file.name), mime: file.type || 'application/octet-stream',
+                size: file.size, chunks: count, stored: true, firmId, note, link: '',
+                date: formatDateToDisplay(todayStr()), uploadedAt: new Date().toISOString()
             });
+            fileBlobCache.set(id, new Blob([buf], { type: file.type || 'application/octet-stream' }));
+            saveStateLocally();
+            await syncDataToCloud();   // рўйхатни дарҳол булутга ёзамиз
+        }
+
+        async function startUpload() {
+            const errEl = document.getElementById('upload-error');
+            const showErr = msg => { errEl.innerText = msg; errEl.classList.remove('hidden'); };
+            errEl.classList.add('hidden');
+            const files = [...document.getElementById('modal-file-input').files];
+            const firmId = Number(document.getElementById('modal-file-firm').value) || null;
+            const note = document.getElementById('modal-file-note').value.trim();
+            const linkName = document.getElementById('modal-link-name').value.trim();
+            let link = document.getElementById('modal-file-link').value.trim();
+
+            if (!files.length) {
+                // Фақат ҳавола
+                if (!link) { showErr('Файл танланг ёки ҳавола киритинг.'); return; }
+                if (!/^https?:\/\//i.test(link)) { showErr('Ҳавола https:// билан бошланиши керак.'); return; }
+                state.files.unshift({ id: Date.now(), name: linkName || link, type: 'link', link, firmId, note, stored: false, date: formatDateToDisplay(todayStr()) });
+                saveState(); closeModal(); renderFiles();
+                return;
+            }
+            if (!currentUser || !cloudReady) { showErr('Булут билан алоқа йўқ. Тизимга кирганингизни ва интернетни текширинг.'); return; }
+            const tooBig = files.filter(f => f.size > FILE_MAX);
+            if (tooBig.length) { showErr('15 МБ дан катта файллар: ' + tooBig.map(f => f.name).join(', ') + '\nУларни сиқинг (масалан, PDF ни кичрайтиринг) ёки Google Drive ҳаволаси сифатида қўшинг.'); return; }
+            const need = files.reduce((s, f) => s + f.size, 0);
+            if (storedBytes() + need > STORAGE_SOFT_LIMIT) { showErr('Бепул жой етмайди. Кераксиз файлларни ўчиринг.'); return; }
+
+            uploadInProgress = true;
+            document.getElementById('upload-start').disabled = true;
+            document.getElementById('upload-start').classList.add('opacity-50');
+            document.getElementById('upload-cancel').classList.add('hidden');
+            let ok = 0;
+            try {
+                for (let k = 0; k < files.length; k++) {
+                    await uploadOneFile(files[k], firmId, note, k, files.length);
+                    ok++;
+                }
+                closeModal();
+                renderFiles(); updateBadges();
+                showNotification('Юкланди', `${ok} та файл булутга сақланди.`, 'fa-solid fa-cloud-arrow-up');
+            } catch (err) {
+                console.error('Upload error:', err);
+                renderFiles(); updateBadges();
+                showErr((ok ? `${ok} та файл юкланди, қолганлари юкланмади.\n` : '') + cloudErrorText(err));
+                document.getElementById('upload-cancel').classList.remove('hidden');
+            } finally {
+                uploadInProgress = false;
+                const b = document.getElementById('upload-start');
+                if (b) { b.disabled = false; b.classList.remove('opacity-50'); }
+            }
+        }
+
+        async function fetchFileBlob(f) {
+            if (fileBlobCache.has(f.id)) return fileBlobCache.get(f.id);
+            if (!currentUser) throw new Error('Тизимга киринг');
+            const { getDoc } = window.fb;
+            const snaps = await Promise.all(Array.from({ length: f.chunks }, (_, i) => getDoc(chunkRef(f.id, i))));
+            if (snaps.some(s => !s.exists())) throw new Error('Файлнинг бир қисми булутда топилмади');
+            const blob = new Blob(snaps.map(s => s.data().d.toUint8Array()), { type: f.mime || 'application/octet-stream' });
+            fileBlobCache.set(f.id, blob);
+            return blob;
+        }
+
+        async function downloadStoredFile(id) {
+            const f = state.files.find(x => x.id === id);
+            if (!f || !f.stored) return;
+            try {
+                const blob = await fetchFileBlob(f);
+                const url = URL.createObjectURL(blob);
+                const a = document.createElement('a');
+                a.href = url; a.download = f.name;
+                document.body.appendChild(a); a.click(); a.remove();
+                setTimeout(() => URL.revokeObjectURL(url), 60000);
+            } catch (err) {
+                showNotification('Хатолик', 'Файлни юклаб бўлмади. ' + cloudErrorText(err));
+            }
+        }
+
+        async function previewStoredFile(id) {
+            const f = state.files.find(x => x.id === id);
+            if (!f || !f.stored) return;
+            const win = window.open('', '_blank');   // попап блокланмаслиги учун ойнани олдиндан очамиз
+            if (win) win.document.write('<p style="font-family:sans-serif;padding:20px">Юкланмоқда...</p>');
+            try {
+                const blob = await fetchFileBlob(f);
+                const url = URL.createObjectURL(blob);
+                if (win) win.location.href = url; else window.open(url, '_blank');
+                setTimeout(() => URL.revokeObjectURL(url), 10 * 60000);
+            } catch (err) {
+                if (win) win.close();
+                showNotification('Хатолик', 'Файлни очиб бўлмади. ' + cloudErrorText(err));
+            }
+        }
+
+        function openFileEditModal(id) {
+            const f = state.files.find(x => x.id === id);
+            if (!f) return;
+            openModal('Файл маълумотлари', `
+                <div class="space-y-4">
+                    <div>
+                        <label class="block text-xs font-semibold text-gray-600 mb-1">Номи</label>
+                        <input type="text" id="edit-file-name" value="${esc(f.name)}" class="w-full bg-gray-50 border border-gray-200 rounded-xl px-4 py-2.5 text-xs">
+                    </div>
+                    <div>
+                        <label class="block text-xs font-semibold text-gray-600 mb-1">Фирма</label>
+                        <select id="edit-file-firm" class="w-full bg-gray-50 border border-gray-200 rounded-xl px-4 py-2.5 text-xs">${firmOptionsHtml(f.firmId)}</select>
+                    </div>
+                    <div>
+                        <label class="block text-xs font-semibold text-gray-600 mb-1">Изоҳ</label>
+                        <input type="text" id="edit-file-note" value="${esc(f.note)}" class="w-full bg-gray-50 border border-gray-200 rounded-xl px-4 py-2.5 text-xs">
+                    </div>
+                    <div class="flex justify-end space-x-3 pt-4 border-t border-gray-100">
+                        <button onclick="closeModal()" class="px-4 py-2 rounded-xl text-gray-600 text-xs">Бекор қилиш</button>
+                        <button onclick="saveFileEdit(${f.id})" class="px-5 py-2 bg-indigo-600 text-white rounded-xl text-xs font-medium">Сақлаш</button>
+                    </div>
+                </div>`);
+        }
+
+        function saveFileEdit(id) {
+            const f = state.files.find(x => x.id === id);
+            if (!f) return;
+            const name = document.getElementById('edit-file-name').value.trim();
+            if (name) f.name = name;
+            f.firmId = Number(document.getElementById('edit-file-firm').value) || null;
+            f.note = document.getElementById('edit-file-note').value.trim();
             saveState(); closeModal(); renderFiles();
+        }
+
+        function deleteFile(id) {
+            const f = state.files.find(x => x.id === id);
+            if (!f) return;
+            confirmAction('Файлни ўчириш', `«${f.name}» ${f.stored ? 'булутдан бутунлай ўчирилади' : 'рўйхатдан ўчирилади'}. Тасдиқлайсизми?`, async () => {
+                if (f.stored) {
+                    if (!currentUser || !cloudReady) { showNotification('Хатолик', 'Булут билан алоқа йўқ, файлни ҳозир ўчириб бўлмайди.'); return; }
+                    try { await deleteChunks(f.id, f.chunks); }
+                    catch (err) { showNotification('Хатолик', 'Файл ўчирилмади. ' + cloudErrorText(err)); return; }
+                    fileBlobCache.delete(f.id);
+                }
+                state.files = state.files.filter(x => x.id !== id);
+                saveState(); renderFiles();
+            });
         }
 
         // ===== Қонунчилик =====
@@ -1444,7 +1739,7 @@
     <!-- Firebase (v10) — config клиент учун очиқ бўлиши нормал; ҳимоя Firestore қоидалари орқали -->
     <script type="module">
         import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
-        import { getFirestore, doc, setDoc, getDoc } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
+        import { getFirestore, doc, setDoc, getDoc, writeBatch, Bytes } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
         import { getAuth, onAuthStateChanged, signInWithEmailAndPassword, signOut, sendPasswordResetEmail } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-auth.js";
 
         const firebaseConfig = {
@@ -1460,7 +1755,7 @@
         const app = initializeApp(firebaseConfig);
         window.fb = {
             db: getFirestore(app), auth: getAuth(app),
-            doc, setDoc, getDoc, onAuthStateChanged, signInWithEmailAndPassword, signOut, sendPasswordResetEmail
+            doc, setDoc, getDoc, writeBatch, Bytes, onAuthStateChanged, signInWithEmailAndPassword, signOut, sendPasswordResetEmail
         };
         window.onFirebaseReady();
     </script>
